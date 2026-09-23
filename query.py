@@ -29,5 +29,11 @@ print(con.sql("""
     GROUP BY company
     ORDER BY india_jobs DESC
 """))
-
+print("Jobs per source:")
+print(con.sql("""
+    SELECT source, COUNT(DISTINCT company) AS companies, COUNT(*) AS jobs
+    FROM raw_jobs
+    GROUP BY source
+    ORDER BY jobs DESC
+"""))
 con.close()
