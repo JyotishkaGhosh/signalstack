@@ -2,11 +2,11 @@ name: Daily jobs pipeline
 
 on:
   schedule:
-    - cron: "30 0 * * *"     # every day at 6:00 AM India time
-  workflow_dispatch:          # also lets you run it manually with a button
+    - cron: "30 0 * * *"
+  workflow_dispatch:
 
 permissions:
-  contents: write             # allows the robot to save data to your repo
+  contents: write
 
 jobs:
   run-pipeline:
@@ -26,7 +26,7 @@ jobs:
       - name: Collect today's jobs
         run: python extract_jobs.py
 
-            - name: Save new data to the repo
+      - name: Save new data to the repo
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
