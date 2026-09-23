@@ -1,0 +1,7 @@
+.venv/
+signalstack.duckdb
+__pycache__/
+.env
+# Raw API responses: only kept locally for a few days, the history file replaces them
+data/raw/
+.claude/

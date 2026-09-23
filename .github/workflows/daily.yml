@@ -1,0 +1,46 @@
+name: Daily jobs pipeline
+
+on:
+  schedule:
+    - cron: "30 0 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get the code
+        uses: actions/checkout@v4
+
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install libraries
+        run: pip install -r requirements.txt
+
+      - name: Collect today's jobs
+        env:
+          ADZUNA_APP_ID: ${{ secrets.ADZUNA_APP_ID }}
+          ADZUNA_APP_KEY: ${{ secrets.ADZUNA_APP_KEY }}
+        run: python extract_jobs.py
+
+      # load.py merges today's raw files into data/job_history.parquet; raw files are not committed
+      - name: Load, transform and export
+        run: |
+          python load.py
+          python transform.py
+          python export.py
+
+      - name: Save new data to the repo
+        run: |
+          git config user.name "Jyotishka Ghosh"
+          git config user.email "146670331+JyotishkaGhosh@users.noreply.github.com"
+          git add data/job_history.parquet site/data.json README.md
+          git diff --cached --quiet || git commit -m "Daily data: $(date +%F)"
+          git pull --rebase origin main
+          git push

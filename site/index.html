@@ -1,0 +1,1570 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SignalStack · Jobs</title>
+<meta name="description" content="Find and track jobs from company career pages and public job boards, updated daily.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232f55d4'/%3E%3Cpath d='M9 20h14M9 15h10M9 10h6' stroke='white' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#f6f6f4; --surface:#ffffff; --surface-2:#f0f0ed; --border:#e2e2dd; --border-strong:#cdcdc6;
+  --text:#1c1c1a; --text-2:#56564f; --text-3:#85857d;
+  --accent:#2f55d4; --accent-hover:#2446b8; --accent-soft:#edf1fd; --accent-text:#2447b5; --on-accent:#ffffff;
+  --danger:#b3261e; --shadow:0 1px 2px rgba(20,20,15,.05);
+  --radius:10px; --header-h:60px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#131416; --surface:#1b1c1f; --surface-2:#232428; --border:#2d2f34; --border-strong:#3c3f45;
+    --text:#ececea; --text-2:#a9a9a3; --text-3:#7c7c76;
+    --accent:#7d98ff; --accent-hover:#96acff; --accent-soft:#232a44; --accent-text:#a9bbff; --on-accent:#0f1320;
+    --danger:#f2867e; --shadow:none;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#131416; --surface:#1b1c1f; --surface-2:#232428; --border:#2d2f34; --border-strong:#3c3f45;
+  --text:#ececea; --text-2:#a9a9a3; --text-3:#7c7c76;
+  --accent:#7d98ff; --accent-hover:#96acff; --accent-soft:#232a44; --accent-text:#a9bbff; --on-accent:#0f1320;
+  --danger:#f2867e; --shadow:none;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--accent-text)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.num{font-variant-numeric:tabular-nums}
+svg{flex:none}
+[hidden]{display:none!important}
+
+/* ---------- Header ---------- */
+.top{position:sticky;top:0;z-index:40;background:var(--surface);border-bottom:1px solid var(--border)}
+.top-in{max-width:1280px;margin:0 auto;height:var(--header-h);padding:0 24px;display:flex;align-items:center;gap:20px}
+.brand{display:flex;align-items:center;gap:9px;font-weight:650;font-size:15px;letter-spacing:-.01em;color:var(--text);text-decoration:none;white-space:nowrap}
+.brand-mark{width:24px;height:24px;border-radius:6px;background:var(--accent);display:grid;place-items:center}
+.search{position:relative;flex:1;max-width:560px}
+.search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--text-3);pointer-events:none}
+.search input{width:100%;height:38px;padding:0 64px 0 34px;border:1px solid var(--border-strong);border-radius:8px;background:var(--bg);outline:none}
+.search input::placeholder{color:var(--text-3)}
+.search input:focus{border-color:var(--accent);background:var(--surface);box-shadow:0 0 0 3px var(--accent-soft)}
+.search input::-webkit-search-cancel-button{display:none}
+.search-clear{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:none;color:var(--text-2);padding:4px 8px;border-radius:6px;cursor:pointer;font-size:13px}
+.search-clear:hover{background:var(--surface-2)}
+.search kbd{position:absolute;right:10px;top:50%;transform:translateY(-50%)}
+kbd{font:12px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;padding:3px 6px;border:1px solid var(--border-strong);border-radius:5px;color:var(--text-2);background:var(--surface)}
+.top-actions{display:flex;align-items:center;gap:6px;margin-left:auto}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:34px;padding:0 12px;border:1px solid var(--border-strong);border-radius:8px;background:var(--surface);color:var(--text);cursor:pointer;text-decoration:none;white-space:nowrap;font-weight:500;font-size:13.5px}
+.btn:hover{background:var(--surface-2)}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.btn-primary:hover{background:var(--accent-hover);border-color:var(--accent-hover)}
+.btn-quiet{border-color:transparent;background:transparent;color:var(--text-2)}
+.btn-quiet:hover{background:var(--surface-2);color:var(--text)}
+.icon-btn{width:34px;padding:0}
+.menu-wrap{position:relative}
+.menu{position:absolute;right:0;top:calc(100% + 6px);min-width:210px;padding:6px;background:var(--surface);border:1px solid var(--border);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:50}
+.menu[hidden]{display:none}
+.menu button{display:block;width:100%;text-align:left;padding:8px 10px;border:0;background:none;border-radius:6px;cursor:pointer}
+.menu button:hover,.menu button:focus-visible{background:var(--surface-2);outline:none}
+.menu hr{border:0;border-top:1px solid var(--border);margin:6px 2px}
+.menu small{display:block;color:var(--text-3);font-size:12px;padding:4px 10px 2px}
+.menu .menu-email{color:var(--text);font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:240px}
+.acct-btn{gap:8px;padding:0 8px 0 4px}
+.avatar{width:26px;height:26px;border-radius:50%;background:var(--accent-soft);color:var(--accent-text);display:grid;place-items:center;font-weight:600;font-size:12.5px;flex:none}
+.acct-email{max-width:180px;overflow:hidden;text-overflow:ellipsis}
+
+/* ---------- Welcome ---------- */
+.w-top{max-width:1280px;margin:0 auto;height:60px;padding:0 24px;display:flex;align-items:center;justify-content:space-between}
+.welcome-main{max-width:460px;margin:0 auto;padding:56px 24px 40px}
+.welcome-main h1{font-size:26px;line-height:1.25;letter-spacing:-.015em;font-weight:650;margin:0 0 12px}
+.lede{color:var(--text-2);font-size:15px;margin:0 0 10px}
+.w-stats{color:var(--text-3);font-size:13px;margin:0 0 28px;min-height:20px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:22px;box-shadow:var(--shadow)}
+.card h2{font-size:15px;font-weight:600;margin:0 0 4px}
+.muted{color:var(--text-2);font-size:13.5px;margin:0 0 16px}
+.field-label{display:block;font-size:13px;font-weight:500;margin-bottom:6px}
+.input{width:100%;height:40px;padding:0 12px;border:1px solid var(--border-strong);border-radius:8px;background:var(--surface);outline:none}
+.input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.input[aria-invalid="true"]{border-color:var(--danger)}
+.btn-block{width:100%;height:40px;margin-top:10px}
+.btn:disabled{opacity:.6;cursor:default}
+.form-msg{color:var(--danger);font-size:13px;margin:8px 0 0}
+.form-msg:empty{display:none}
+.or{display:flex;align-items:center;gap:12px;color:var(--text-3);font-size:12.5px;margin:18px 0 8px}
+.or::before,.or::after{content:"";flex:1;border-top:1px solid var(--border)}
+.sent h2{margin-bottom:6px}
+.sent p{color:var(--text-2);margin:0 0 12px}
+.sent b{color:var(--text);font-weight:600;overflow-wrap:anywhere}
+.w-note{color:var(--text-3);font-size:13px;margin:14px 2px 0}
+.w-alert{border:1px solid var(--border-strong);background:var(--surface);border-radius:var(--radius);padding:10px 14px;margin:0 0 16px;font-size:13px;color:var(--text)}
+.w-alert:empty{display:none}
+.dlg-body{padding:16px 18px 20px}
+
+/* ---------- Segments ---------- */
+.segments{background:var(--surface);border-bottom:1px solid var(--border)}
+.seg-in{max-width:1280px;margin:0 auto;padding:0 24px;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+.seg-in::-webkit-scrollbar{display:none}
+.seg{position:relative;display:flex;align-items:center;gap:8px;padding:12px 12px 13px;border:0;background:none;color:var(--text-2);cursor:pointer;white-space:nowrap;font-weight:500}
+.seg:hover{color:var(--text)}
+.seg[aria-selected="true"]{color:var(--text)}
+.seg[aria-selected="true"]::after{content:"";position:absolute;left:10px;right:10px;bottom:-1px;height:2px;border-radius:2px;background:var(--accent)}
+.seg:focus-visible{outline-offset:-4px;border-radius:8px}
+.seg .count{font-size:12px;color:var(--text-3);background:var(--surface-2);border-radius:999px;padding:1px 7px;min-width:24px;text-align:center}
+.seg[aria-selected="true"] .count{background:var(--accent-soft);color:var(--accent-text)}
+.seg .count:empty{display:none}
+.seg-divider{width:1px;margin:12px 6px;background:var(--border);flex:none}
+
+/* ---------- Layout ---------- */
+.layout{max-width:1280px;margin:0 auto;padding:24px;display:grid;grid-template-columns:260px minmax(0,1fr);gap:32px;align-items:start}
+.filters{position:sticky;top:calc(var(--header-h) + 16px);max-height:calc(100vh - var(--header-h) - 32px);overflow:auto;scrollbar-width:thin;padding-right:4px}
+.drawer-head,.drawer-foot{display:none}
+.f-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.f-top h2{font-size:13px;font-weight:600;margin:0}
+.link{border:0;background:none;padding:2px 0;color:var(--accent-text);cursor:pointer;font-size:13px}
+.link:hover{text-decoration:underline}
+.link[hidden]{display:none}
+.group{border-top:1px solid var(--border);padding:12px 0}
+.group:first-of-type{border-top:0}
+.g-head{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.g-toggle{display:flex;align-items:center;gap:6px;flex:1;border:0;background:none;padding:4px 0;cursor:pointer;font-weight:600;font-size:13px;text-align:left}
+.g-toggle svg{color:var(--text-3);transition:transform .15s}
+.g-toggle[aria-expanded="false"] svg{transform:rotate(-90deg)}
+.g-sel{font-weight:500;color:var(--accent-text);font-size:12px}
+.g-body{padding-top:6px}
+.g-body[hidden]{display:none}
+.g-find{width:100%;height:32px;padding:0 10px;margin-bottom:6px;border:1px solid var(--border);border-radius:7px;background:var(--surface);outline:none;font-size:13px}
+.g-find:focus{border-color:var(--accent)}
+.opts{list-style:none;margin:0;padding:0}
+.opts.scroll{max-height:260px;overflow:auto;scrollbar-width:thin}
+.opt{display:flex;align-items:center;gap:9px;padding:5px 6px;margin:0 -6px;border-radius:6px;cursor:pointer;font-size:13.5px}
+.opt:hover{background:var(--surface-2)}
+.opt input{margin:0;width:15px;height:15px;accent-color:var(--accent);flex:none;cursor:pointer}
+.opt .name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.opt .n{color:var(--text-3);font-size:12px}
+.opt.zero{color:var(--text-3)}
+.g-more{margin-top:4px}
+.g-empty{color:var(--text-3);font-size:13px;padding:4px 0}
+
+/* ---------- Results ---------- */
+.results-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.results-head h1{font-size:15px;font-weight:600;margin:0}
+.results-head .hint{color:var(--text-3);font-size:13px}
+.results-head .sp{flex:1}
+.sort{display:flex;align-items:center;gap:8px;color:var(--text-2);font-size:13px}
+.select{height:34px;padding:0 30px 0 10px;border:1px solid var(--border-strong);border-radius:8px;background:var(--surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none' stroke='%2385857d' stroke-width='1.6'%3E%3Cpath d='M1 1l4 4 4-4'/%3E%3C/svg%3E") no-repeat right 10px center;appearance:none;-webkit-appearance:none;cursor:pointer;font-size:13.5px}
+.select:hover{border-color:var(--text-3)}
+.filters-btn{display:none}
+.badge-n{background:var(--accent);color:var(--on-accent);border-radius:999px;font-size:11px;padding:0 6px;line-height:18px;font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.chips:empty{display:none}
+.chip{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 6px 0 10px;border:1px solid var(--border-strong);border-radius:999px;background:var(--surface);cursor:pointer;font-size:13px;color:var(--text)}
+.chip:hover{border-color:var(--text-3)}
+.chip span{color:var(--text-3)}
+.chip svg{color:var(--text-2)}
+.chip-clear{border:0;background:none;color:var(--accent-text);cursor:pointer;font-size:13px;padding:0 6px}
+.chip-clear:hover{text-decoration:underline}
+.notice{border:1px solid var(--border);background:var(--surface);border-radius:var(--radius);padding:10px 14px;margin-bottom:14px;color:var(--text-2);font-size:13px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.notice[hidden]{display:none}
+
+.jobs{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.job{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;box-shadow:var(--shadow);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 20px;outline:none}
+.job:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.job.tracked{border-color:var(--border-strong)}
+.j-title{margin:0;font-size:15px;font-weight:600;line-height:1.35;letter-spacing:-.005em;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.j-title a{color:inherit;text-decoration:none}
+.j-title a:hover{text-decoration:underline}
+.j-company{color:var(--text);font-size:14px;margin-top:2px}
+.j-meta{display:flex;flex-wrap:wrap;gap:4px 0;color:var(--text-2);font-size:13px;margin-top:6px}
+.j-meta > span:not(:last-child)::after{content:"·";margin:0 8px;color:var(--text-3)}
+.tag{font-size:11.5px;font-weight:600;border-radius:5px;padding:1px 6px;letter-spacing:.01em;white-space:nowrap}
+.tag-new{color:var(--accent-text);background:var(--accent-soft)}
+.tag-gone{color:var(--text-2);background:var(--surface-2)}
+.j-actions{grid-column:2;grid-row:1 / span 3;display:flex;align-items:flex-start;gap:8px}
+.status{width:132px}
+.status.on{border-color:var(--accent);color:var(--accent-text);font-weight:500}
+.j-note{grid-column:1 / -1;margin-top:10px;padding:8px 10px;border-radius:7px;background:var(--surface-2);color:var(--text-2);font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere;cursor:pointer;border:0;text-align:left}
+.j-note:hover{color:var(--text)}
+.note-edit{grid-column:1 / -1;margin-top:10px}
+.note-edit textarea{width:100%;min-height:68px;resize:vertical;padding:8px 10px;border:1px solid var(--border-strong);border-radius:7px;background:var(--surface);outline:none;font-size:13.5px}
+.note-edit textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.note-row{display:flex;align-items:center;justify-content:space-between;margin-top:6px;color:var(--text-3);font-size:12px}
+.more-wrap{display:flex;justify-content:center;padding:18px 0 4px}
+.empty{background:var(--surface);border:1px dashed var(--border-strong);border-radius:var(--radius);padding:40px 24px;text-align:center;color:var(--text-2)}
+.empty h2{font-size:15px;color:var(--text);margin:0 0 6px}
+.empty p{margin:0 0 14px}
+.loading .job{height:106px;background:var(--surface);opacity:.6}
+
+/* ---------- Footer ---------- */
+footer{border-top:1px solid var(--border);margin-top:24px}
+.foot-in{max-width:1280px;margin:0 auto;padding:22px 24px 36px;color:var(--text-3);font-size:12.5px;display:flex;flex-direction:column;gap:6px}
+footer a{color:var(--text-2)}
+.foot-row{display:flex;flex-wrap:wrap;gap:4px 16px}
+
+/* ---------- Toast & dialog ---------- */
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);display:flex;align-items:center;gap:14px;padding:10px 14px;background:var(--text);color:var(--bg);border-radius:9px;font-size:13.5px;z-index:80;box-shadow:0 6px 20px rgba(0,0,0,.18);max-width:calc(100vw - 32px)}
+.toast[hidden]{display:none}
+.toast button{border:0;background:none;color:inherit;font-weight:600;text-decoration:underline;cursor:pointer;padding:0}
+dialog{border:1px solid var(--border);border-radius:12px;background:var(--surface);color:var(--text);padding:0;width:min(420px,calc(100vw - 32px))}
+dialog::backdrop{background:rgba(0,0,0,.35)}
+.dlg-head{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border)}
+.dlg-head h2{font-size:15px;margin:0}
+.keys{margin:0;padding:12px 18px 18px;display:grid;grid-template-columns:auto 1fr;gap:10px 16px;align-items:center;font-size:13.5px}
+.keys dt{white-space:nowrap}
+.keys dd{margin:0;color:var(--text-2)}
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:60}
+.scrim[hidden]{display:none}
+
+/* ---------- Phone and tablet ---------- */
+@media (max-width:960px){
+  .layout{grid-template-columns:1fr;padding:16px}
+  .filters{position:fixed;z-index:70;top:0;bottom:0;left:0;width:min(360px,88vw);max-height:none;padding:0;background:var(--surface);border-right:1px solid var(--border);transform:translateX(-102%);transition:transform .2s ease;display:flex;flex-direction:column;visibility:hidden}
+  .filters.open{transform:none;visibility:visible}
+  .drawer-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border)}
+  .drawer-head h2{font-size:15px;margin:0}
+  .f-scroll{flex:1;overflow:auto;padding:4px 16px 16px}
+  .f-top{display:none}
+  .drawer-foot{display:flex;gap:10px;padding:12px 16px;border-top:1px solid var(--border)}
+  .drawer-foot .btn{flex:1;height:40px}
+  .filters-btn{display:inline-flex}
+  .sort-label{display:none}
+}
+@media (max-width:640px){
+  .top-in{height:auto;padding:10px 16px;flex-wrap:wrap;gap:10px}
+  .search{order:3;flex-basis:100%;max-width:none}
+  .search kbd{display:none}
+  :root{--header-h:106px}
+  .seg-in{padding:0 12px}
+  .seg{padding:11px 9px 12px}
+  .seg-divider{margin:12px 2px}
+  .results-head .hint{flex-basis:100%;order:5;margin-top:-6px}
+  .job{grid-template-columns:1fr;padding:14px}
+  .j-actions{grid-column:1;grid-row:auto;margin-top:12px}
+  .j-actions .apply{flex:1;height:38px}
+  .j-actions .select,.j-actions .btn{height:38px}
+  .status{width:auto;flex:1}
+  .foot-in{padding:20px 16px 32px}
+  .w-top{padding:0 16px}
+  .welcome-main{padding:32px 16px 32px}
+  .welcome-main h1{font-size:22px}
+  .card{padding:18px}
+  .acct-email{display:none}
+  .acct-btn{padding:0 4px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div id="welcome" hidden>
+  <header class="w-top">
+    <span class="brand">
+      <span class="brand-mark" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><path d="M2 11h10M2 7h7M2 3h4"/></svg></span>
+      SignalStack
+    </span>
+    <button class="btn btn-quiet icon-btn theme-btn" type="button" aria-label="Switch theme">
+      <svg class="icon-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>
+      <svg class="icon-sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true" hidden><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+  </header>
+  <main class="welcome-main">
+    <h1>Jobs from company career pages, in one place</h1>
+    <p class="lede">SignalStack collects openings from company career pages and public job boards every day. Filter by location, level and role, and keep track of where you've applied.</p>
+    <p class="w-stats num" id="w-stats"></p>
+    <div class="w-alert" id="w-alert" role="alert"></div>
+    <section class="card" aria-labelledby="w-signin-title">
+      <h2 id="w-signin-title">Sign in</h2>
+      <p class="muted">We'll email you a sign-in link. No password needed.</p>
+      <div data-signin="w"></div>
+      <div class="or">or</div>
+      <button class="btn btn-block" type="button" id="guest-btn">Browse as guest</button>
+    </section>
+    <p class="w-note" id="w-note">Guests can search and filter every job. Sign in to save jobs, add notes and track your applications.</p>
+  </main>
+</div>
+
+<div id="app" hidden>
+<header class="top">
+  <div class="top-in">
+    <a class="brand" href="./" aria-label="SignalStack, all jobs">
+      <span class="brand-mark" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><path d="M2 11h10M2 7h7M2 3h4"/></svg></span>
+      SignalStack
+    </a>
+    <div class="search" role="search">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <label for="q" class="sr-only">Search jobs</label>
+      <input id="q" type="search" placeholder="Search title, company or location" autocomplete="off" spellcheck="false">
+      <kbd id="q-kbd" aria-hidden="true">/</kbd>
+      <button class="search-clear" id="q-clear" type="button" hidden>Clear</button>
+    </div>
+    <div class="top-actions">
+      <button class="btn btn-quiet icon-btn theme-btn" type="button" aria-label="Switch theme">
+        <svg class="icon-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>
+        <svg class="icon-sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true" hidden><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <button class="btn" id="signin-btn" type="button" data-open-signin>Sign in</button>
+      <div class="menu-wrap" id="account" hidden>
+        <button class="btn btn-quiet acct-btn" id="acct-btn" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="acct-menu">
+          <span class="avatar" id="acct-initial" aria-hidden="true"></span>
+          <span class="acct-email" id="acct-email"></span>
+          <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg>
+        </button>
+        <div class="menu" id="acct-menu" role="menu" hidden>
+          <small>Signed in as</small>
+          <small class="menu-email" id="acct-menu-email"></small>
+          <hr>
+          <button type="button" role="menuitem" data-action="csv">Export tracked jobs (CSV)</button>
+          <button type="button" role="menuitem" data-action="backup">Download backup</button>
+          <button type="button" role="menuitem" data-action="restore">Restore from backup</button>
+          <hr>
+          <button type="button" role="menuitem" data-action="keys">Keyboard shortcuts</button>
+          <hr>
+          <button type="button" role="menuitem" data-action="signout">Sign out</button>
+        </div>
+        <input type="file" id="restore-file" accept="application/json,.json" hidden>
+      </div>
+    </div>
+  </div>
+</header>
+
+<nav class="segments" aria-label="Job lists">
+  <div class="seg-in" role="tablist" id="tabs">
+    <button class="seg" role="tab" id="tab-all" data-tab="all" aria-controls="results">All jobs <span class="count num" data-count="all"></span></button>
+    <button class="seg" role="tab" id="tab-fresher" data-tab="fresher" aria-controls="results">Freshers <span class="count num" data-count="fresher"></span></button>
+    <button class="seg" role="tab" id="tab-experienced" data-tab="experienced" aria-controls="results">Experienced <span class="count num" data-count="experienced"></span></button>
+    <span class="seg-divider" aria-hidden="true"></span>
+    <button class="seg" role="tab" id="tab-saved" data-tab="saved" aria-controls="results">Saved <span class="count num" data-count="saved"></span></button>
+    <button class="seg" role="tab" id="tab-applied" data-tab="applied" aria-controls="results">Applied <span class="count num" data-count="applied"></span></button>
+    <button class="seg" role="tab" id="tab-interviewing" data-tab="interviewing" aria-controls="results">Interviewing <span class="count num" data-count="interviewing"></span></button>
+  </div>
+</nav>
+
+<div class="layout">
+  <aside class="filters" id="filters" aria-label="Filters">
+    <div class="drawer-head">
+      <h2>Filters</h2>
+      <button class="btn btn-quiet icon-btn" id="drawer-close" type="button" aria-label="Close filters">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13"/></svg>
+      </button>
+    </div>
+    <div class="f-scroll">
+      <div class="f-top"><h2>Filters</h2><button class="link" type="button" data-clear="all" hidden>Clear all</button></div>
+      <div id="groups"></div>
+    </div>
+    <div class="drawer-foot">
+      <button class="btn" type="button" data-clear="all">Clear all</button>
+      <button class="btn btn-primary" type="button" id="drawer-done">Show jobs</button>
+    </div>
+  </aside>
+  <div class="scrim" id="scrim" hidden></div>
+
+  <main id="main">
+    <div class="results-head">
+      <h1 id="results-title" aria-live="polite">Loading jobs</h1>
+      <span class="hint" id="results-hint"></span>
+      <span class="sp"></span>
+      <button class="btn filters-btn" id="filters-btn" type="button" aria-controls="filters" aria-expanded="false">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M2 4h12M4.5 8h7M7 12h2"/></svg>
+        Filters <span class="badge-n" id="filters-n" hidden></span>
+      </button>
+      <label class="sort"><span class="sort-label">Sort</span>
+        <select class="select" id="sort" aria-label="Sort jobs">
+          <option value="posted">Newest</option>
+          <option value="added">Recently added</option>
+          <option value="updated">Recently updated</option>
+          <option value="company">Company A–Z</option>
+        </select>
+      </label>
+    </div>
+    <div class="notice" id="legacy-notice" hidden><span id="legacy-text"></span><button class="link" type="button" data-open-signin>Sign in</button></div>
+    <div class="notice" id="sync-notice" hidden><span id="sync-text"></span><button class="link" type="button" id="sync-retry">Try again</button></div>
+    <div class="chips" id="chips" aria-label="Active filters"></div>
+    <div id="results" role="tabpanel" aria-labelledby="tab-all">
+      <ul class="jobs loading" aria-hidden="true"><li class="job"></li><li class="job"></li><li class="job"></li></ul>
+    </div>
+  </main>
+</div>
+</div>
+
+<footer>
+  <div class="foot-in">
+    <div id="credits">Jobs come from public company career pages and job board APIs.</div>
+    <div class="foot-row">
+      <span id="updated"></span>
+      <span>Apply links go to the original listing.</span>
+    </div>
+    <div>Made by Jyotishka Ghosh · © 2026 All rights reserved</div>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden><span id="toast-text"></span><button type="button" id="toast-undo" hidden>Undo</button></div>
+
+<dialog id="keys-dlg" aria-labelledby="keys-title">
+  <div class="dlg-head"><h2 id="keys-title">Keyboard shortcuts</h2><button class="btn btn-quiet icon-btn" type="button" data-close aria-label="Close"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13"/></svg></button></div>
+  <dl class="keys">
+    <dt><kbd>/</kbd></dt><dd>Search</dd>
+    <dt><kbd>j</kbd> <kbd>k</kbd></dt><dd>Next or previous job</dd>
+    <dt><kbd>o</kbd></dt><dd>Open the job's listing</dd>
+    <dt><kbd>s</kbd></dt><dd>Save or unsave the job</dd>
+    <dt><kbd>a</kbd></dt><dd>Mark as applied</dd>
+    <dt><kbd>n</kbd></dt><dd>Add or edit a note</dd>
+    <dt><kbd>1</kbd> – <kbd>6</kbd></dt><dd>Switch list</dd>
+    <dt><kbd>f</kbd></dt><dd>Open filters on small screens</dd>
+    <dt><kbd>?</kbd></dt><dd>Show this list</dd>
+  </dl>
+</dialog>
+
+<dialog id="signin-dlg" aria-labelledby="signin-title">
+  <div class="dlg-head"><h2 id="signin-title">Sign in to save jobs</h2><button class="btn btn-quiet icon-btn" type="button" data-close aria-label="Close"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13"/></svg></button></div>
+  <div class="dlg-body">
+    <p class="muted">Your saved jobs, notes and application status are kept in your account. We'll email you a sign-in link, no password needed.</p>
+    <div data-signin="d"></div>
+  </div>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.1/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
+<script>
+(() => {
+  "use strict";
+
+  // ---------- Constants ----------
+  const PAGE = 50;
+  const STORE_KEY = "signalstack.tracker.v1";   // saved jobs from before accounts, moved into the account on sign-in
+  const GUEST_KEY = "signalstack.guest";
+  const TABLE = "tracked_jobs";
+  const CONFIG = window.SIGNALSTACK_CONFIG || {};
+  const TABS = ["all", "fresher", "experienced", "saved", "applied", "interviewing"];
+  const TRACK_TABS = ["saved", "applied", "interviewing"];
+  const TAB_HINT = {
+    fresher: "Internships, new grad and entry-level roles (0–2 years)",
+    experienced: "Everything above entry level, plus roles with no level stated",
+    saved: "Jobs you've saved",
+    applied: "Jobs you've applied to",
+    interviewing: "Jobs where you're interviewing",
+  };
+  const STATUSES = [["", "Not tracked"], ["saved", "Saved"], ["applied", "Applied"], ["interviewing", "Interviewing"], ["offer", "Offer"], ["rejected", "Rejected"]];
+  const STATUS_LABEL = Object.fromEntries(STATUSES);
+  const LEVELS = ["Intern", "Entry level", "Mid level", "Senior", "Lead / Staff", "Manager", "Director / Executive", "Not specified"];
+  const POSTED = [["any", "Any time"], ["1", "Today"], ["3", "Last 3 days"], ["7", "Last week"]];
+  const GROUPS = [
+    { key: "posted", label: "Posted", radio: true },
+    { key: "workplace", label: "Workplace", get: j => j.workplace || "Not specified", order: ["Remote", "Hybrid", "On-site", "Not specified"] },
+    { key: "country", label: "Country", get: j => j.country, find: true },
+    { key: "state", label: "State", get: j => j.state, find: true },
+    { key: "city", label: "City / area", get: j => j.city, find: true },
+    { key: "role", label: "Role type", get: j => j.role },
+    { key: "level", label: "Level", get: j => j.level, order: LEVELS },
+    { key: "company", label: "Company", get: j => j.company, find: true },
+    { key: "source", label: "Source", get: j => j.source, name: v => sourceName(v) },
+  ];
+  const SET_GROUPS = GROUPS.filter(g => !g.radio);
+  const COLLAPSED_BY_DEFAULT = new Set(["state", "level", "company", "source"]);
+
+  // ---------- Helpers ----------
+  const $ = (s, el = document) => el.querySelector(s);
+  const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+  const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const fmt = n => Number(n || 0).toLocaleString("en-IN");
+  const norm = s => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+  const safeUrl = u => /^https?:\/\//i.test(u || "") ? u : "#";
+  const plural = (n, one, many) => `${fmt(n)} ${n === 1 ? one : (many || one + "s")}`;
+  const todayStart = () => { const d = new Date(); d.setHours(0, 0, 0, 0); return d.getTime(); };
+  function daysAgo(iso) {
+    if (!iso) return null;
+    const [y, m, d] = iso.split("-").map(Number);
+    return Math.max(0, Math.round((todayStart() - new Date(y, m - 1, d).getTime()) / 864e5));
+  }
+  function agoText(days) {
+    if (days == null) return "";
+    if (days === 0) return "Today";
+    if (days === 1) return "Yesterday";
+    if (days < 7) return `${days} days ago`;
+    if (days < 30) { const w = Math.floor(days / 7); return w === 1 ? "1 week ago" : `${w} weeks ago`; }
+    if (days < 365) { const m = Math.floor(days / 30); return m === 1 ? "1 month ago" : `${m} months ago`; }
+    return "Over a year ago";
+  }
+  function prettyDate(iso) {
+    if (!iso) return "";
+    const d = new Date(iso.length <= 10 ? iso + "T00:00:00" : iso);
+    return isNaN(d) ? iso : d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+  }
+  const debounce = (fn, ms) => { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; };
+
+  // ---------- State ----------
+  const state = {
+    jobs: [], byId: new Map(), sources: [], meta: {},
+    tab: "all", q: "", sort: "posted", limit: PAGE,
+    posted: "any",
+    sel: Object.fromEntries(SET_GROUPS.map(g => [g.key, new Set()])),
+    expanded: new Set(), collapsed: new Set(COLLAPSED_BY_DEFAULT), finds: {},
+    openNotes: new Set(),
+  };
+  const sourceName = id => (state.sources.find(s => s.id === id) || {}).name || id;
+
+  // ---------- Account ----------
+  // The publishable key is public; Row Level Security limits each user to their own rows
+  const sb = window.supabase && CONFIG.supabaseUrl && CONFIG.supabasePublishableKey
+    ? window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabasePublishableKey, { auth: { flowType: "implicit", persistSession: true, detectSessionInUrl: true } })
+    : null;
+  let user = null;          // signed-in user, or null for guests
+  let view = null;          // "welcome" or "app"
+  let trackerReady = false; // the signed-in user's jobs have loaded
+
+  // ---------- Tracking data (kept in the user's account) ----------
+  // tracker maps job id -> { status, note, job, saved_at, applied_at, updated }
+  let tracker = {};
+  const SNAPSHOT_FIELDS = ["title", "company", "location", "city", "state", "country", "workplace", "role", "level", "group", "source", "posted", "first_seen", "url"];
+  const snapshot = j => Object.fromEntries(SNAPSHOT_FIELDS.map(k => [k, j[k] ?? null]));
+  const iso = ms => new Date(ms).toISOString();
+
+  // Every change is shown straight away, then written to the database in the background
+  function setRecord(id, patch) {
+    const job = state.byId.get(id);
+    const prev = tracker[id] ? { ...tracker[id] } : null;
+    const now = Date.now();
+    const rec = { ...(tracker[id] || {}), ...patch, updated: now };
+    if (job) rec.job = snapshot(job);
+    if (rec.status && !rec.saved_at) rec.saved_at = iso(now);
+    if (rec.status && rec.status !== "saved" && !rec.applied_at) rec.applied_at = iso(now);
+    if (!rec.status) delete tracker[id]; else tracker[id] = rec;
+    persist(id);
+    return prev;
+  }
+
+  // Writes for the same job run one after another, and each writes the job's latest state
+  const writes = new Map();
+  function persist(id) {
+    if (!sb || !user) return;
+    const uid = user.id;
+    const run = async () => {
+      if (!user || user.id !== uid) return;
+      const rec = tracker[id];
+      const { error } = rec
+        ? await sb.from(TABLE).upsert({ user_id: uid, job_id: id, status: rec.status, note: rec.note || "", job: rec.job || null }, { onConflict: "user_id,job_id" })
+        : await sb.from(TABLE).delete().eq("user_id", uid).eq("job_id", id);
+      if (error) throw error;
+    };
+    const p = (writes.get(id) || Promise.resolve()).then(run).catch(err => {
+      console.error("Save failed", err);
+      showSyncProblem("Your last change wasn't saved. Check your connection.");
+    });
+    writes.set(id, p);
+  }
+
+  async function fetchTracker() {
+    const out = {};
+    const size = 1000;
+    for (let from = 0; ; from += size) {
+      const { data, error } = await sb.from(TABLE)
+        .select("job_id,status,note,job,saved_at,applied_at,updated_at")
+        .order("job_id").range(from, from + size - 1);
+      if (error) throw error;
+      for (const r of data) out[r.job_id] = { status: r.status, note: r.note || "", job: r.job, saved_at: r.saved_at, applied_at: r.applied_at, updated: Date.parse(r.updated_at) || 0 };
+      if (data.length < size) return out;
+    }
+  }
+
+  async function loadTracker() {
+    const uid = user && user.id;
+    trackerReady = false;
+    $("#sync-notice").hidden = true;
+    try {
+      const t = await fetchTracker();
+      if (!user || user.id !== uid) return;
+      tracker = t;
+      trackerReady = true;
+      refreshSnapshots();
+      await moveBrowserJobs();
+    } catch (err) {
+      console.error("Couldn't load tracked jobs", err);
+      if (user && user.id === uid) showSyncProblem("Couldn't load your saved jobs.");
+    }
+    if (state.jobs.length) refresh(false);
+  }
+
+  function showSyncProblem(text) {
+    $("#sync-text").textContent = text;
+    $("#sync-notice").hidden = false;
+  }
+  $("#sync-retry").addEventListener("click", () => loadTracker());
+
+  // Keep each tracked job's copy up to date in memory while it is still listed; it is written with the next change
+  function refreshSnapshots() {
+    for (const [id, rec] of Object.entries(tracker)) {
+      const j = state.byId.get(id);
+      if (j) rec.job = snapshot(j);
+    }
+  }
+
+  // Adds records (from this browser's old storage or a backup file) to the account.
+  // A record only replaces one already in the account if it was changed more recently.
+  async function importRecords(records) {
+    const uid = user.id;
+    const inserts = [], updates = [], local = {};
+    for (const [id, r] of Object.entries(records || {})) {
+      if (!r || typeof r !== "object" || !id || id.length > 100) continue;
+      const status = r.status && STATUS_LABEL[r.status] ? r.status : (r.note ? "saved" : "");
+      if (!status) continue;
+      const when = Number(r.updated) || Date.now();
+      const cur = tracker[id];
+      if (cur && (cur.updated || 0) >= when) continue;
+      const job = state.byId.has(id) ? snapshot(state.byId.get(id)) : (r.job && typeof r.job === "object" ? snapshotFrom(r.job) : null);
+      const row = { user_id: uid, job_id: id, status, note: String(r.note || "").slice(0, 500), job };
+      if (cur) updates.push(row);
+      else inserts.push({ ...row, saved_at: iso(when), updated_at: iso(when), applied_at: status !== "saved" ? iso(when) : null });
+      local[id] = { ...(cur || {}), status, note: row.note, job, updated: when,
+        saved_at: (cur && cur.saved_at) || iso(when), applied_at: (cur && cur.applied_at) || (status !== "saved" ? iso(when) : null) };
+    }
+    for (const rows of [inserts, updates]) {
+      for (let i = 0; i < rows.length; i += 500) {
+        const { error } = await sb.from(TABLE).upsert(rows.slice(i, i + 500), { onConflict: "user_id,job_id" });
+        if (error) throw error;
+      }
+    }
+    Object.assign(tracker, local);
+    return { added: inserts.length, updated: updates.length };
+  }
+
+  // Jobs saved in this browser before accounts existed
+  function readBrowserJobs() {
+    try {
+      const parsed = JSON.parse(localStorage.getItem(STORE_KEY) || "null");
+      const jobs = parsed && typeof parsed.jobs === "object" && parsed.jobs ? parsed.jobs : {};
+      return Object.values(jobs).some(r => r && (r.status || r.note)) ? jobs : null;
+    } catch (e) { return null; }
+  }
+  const browserJobCount = () => { const j = readBrowserJobs(); return j ? Object.values(j).filter(r => r && (r.status || r.note)).length : 0; };
+
+  async function moveBrowserJobs() {
+    const jobs = readBrowserJobs();
+    if (!jobs) return;
+    try {
+      const n = Object.values(jobs).filter(r => r && (r.status || r.note)).length;
+      await importRecords(jobs);
+      try { localStorage.removeItem(STORE_KEY); } catch (e) {}
+      toast(`Moved ${plural(n, "saved job")} from this browser into your account`);
+    } catch (err) {
+      console.error("Couldn't move browser jobs", err);
+      toast("Couldn't move the jobs saved in this browser. We'll try again next time you sign in.");
+    }
+  }
+
+  // ---------- Theme ----------
+  function currentTheme() {
+    const t = document.documentElement.dataset.theme;
+    if (t) return t;
+    return matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+  function paintThemeButton() {
+    const dark = currentTheme() === "dark";
+    for (const b of $$(".theme-btn")) {
+      $(".icon-moon", b).hidden = dark;
+      $(".icon-sun", b).hidden = !dark;
+      b.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
+    }
+  }
+  try { const t = localStorage.getItem("signalstack.theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}
+  $$(".theme-btn").forEach(b => b.addEventListener("click", () => {
+    const next = currentTheme() === "dark" ? "light" : "dark";
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem("signalstack.theme", next); } catch (e) {}
+    paintThemeButton();
+  }));
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", paintThemeButton);
+  paintThemeButton();
+
+  // ---------- Loading data ----------
+  async function init() {
+    readUrl();
+    // Start downloading jobs straight away, but render only once sign-in has been checked,
+    // so the sign-in link's details are read from the address bar before it is rewritten
+    const data = fetch("data.json", { cache: "no-cache" }).then(res => {
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      return res.json();
+    });
+    data.catch(() => {});
+    const linkError = readLinkError();
+
+    let session = null;
+    if (sb) {
+      try { session = (await sb.auth.getSession()).data.session; } catch (e) { console.error(e); }
+      sb.auth.onAuthStateChange((event, s) => { setTimeout(() => onAuthChange(s), 0); });
+    }
+    if (session) signedIn(session.user, false);
+    else {
+      paintAccount();
+      showView(guestChosen() ? "app" : "welcome");
+      if (linkError) { showView("welcome"); $("#w-alert").textContent = linkError; }
+      else if (!sb) $("#w-alert").textContent = "Sign-in isn't available right now. You can still browse jobs as a guest.";
+    }
+
+    try {
+      hydrate(await data);
+    } catch (err) {
+      showError(err);
+    }
+  }
+
+  function hydrate(d) {
+    state.meta = { data_date: d.data_date, generated_at: d.generated_at };
+    state.sources = d.sources || [];
+    const F = d.fields;
+    state.jobs = (d.jobs || []).map(row => {
+      const j = {};
+      F.forEach((f, i) => { j[f] = row[i]; });
+      return prep(j);
+    });
+    state.byId = new Map(state.jobs.map(j => [j.id, j]));
+    refreshSnapshots();
+    renderCredits();
+    buildGroups();
+    render();
+  }
+
+  // ---------- Welcome page, sign-in and sign-out ----------
+  function showView(v) {
+    view = v;
+    $("#welcome").hidden = v !== "welcome";
+    $("#app").hidden = v !== "app";
+    document.title = v === "welcome" ? "SignalStack · Find and track jobs" : "SignalStack · Jobs";
+    if (v === "welcome") { closeDrawer(); window.scrollTo(0, 0); }
+  }
+
+  const guestChosen = () => { try { return sessionStorage.getItem(GUEST_KEY) === "1"; } catch (e) { return false; } };
+  $("#guest-btn").addEventListener("click", () => {
+    try { sessionStorage.setItem(GUEST_KEY, "1"); } catch (e) {}
+    showView("app");
+    $("#q").focus();
+  });
+
+  // A sign-in link that has expired or was already used comes back with an error in the address
+  function readLinkError() {
+    const p = new URLSearchParams(location.hash.slice(1));
+    const q = new URLSearchParams(location.search);
+    const err = p.get("error_description") || q.get("error_description");
+    if (!err) return "";
+    history.replaceState(null, "", location.pathname);
+    return /expired|invalid/i.test(err)
+      ? "That sign-in link has expired or was already used. Enter your email to get a new one."
+      : `Sign-in didn't work: ${err}`;
+  }
+
+  function onAuthChange(session) {
+    const next = session ? session.user : null;
+    if (next && (!user || user.id !== next.id)) signedIn(next, true);
+    else if (!next && user) signedOut();
+  }
+
+  function signedIn(u, announce) {
+    user = u;
+    tracker = {};
+    trackerReady = false;
+    try { sessionStorage.removeItem(GUEST_KEY); } catch (e) {}
+    if ($("#signin-dlg").open) $("#signin-dlg").close();
+    resetSignInForms();
+    paintAccount();
+    showView("app");
+    if (state.jobs.length) refresh(false);
+    if (announce) toast(`Signed in as ${u.email || "you"}`);
+    loadTracker();
+  }
+
+  function signedOut() {
+    user = null;
+    tracker = {};
+    trackerReady = false;
+    undo = null;
+    state.openNotes.clear();
+    paintAccount();
+    $("#sync-notice").hidden = true;
+    if (["saved", "applied", "interviewing"].includes(state.tab)) state.tab = "all";
+    if (state.jobs.length) refresh();
+    hideToast();
+    showView("welcome");
+  }
+
+  async function signOut() {
+    try { await sb.auth.signOut({ scope: "local" }); } catch (e) { console.error(e); }
+    signedOut();
+  }
+
+  function paintAccount() {
+    $("#account").hidden = !user;
+    $("#signin-btn").hidden = !!user;
+    if (user) {
+      const email = user.email || "Your account";
+      $("#acct-initial").textContent = (email[0] || "?").toUpperCase();
+      $("#acct-email").textContent = email;
+      $("#acct-menu-email").textContent = email;
+      $("#acct-btn").setAttribute("aria-label", `Account: ${email}`);
+    }
+    const n = user ? 0 : browserJobCount();
+    $("#legacy-notice").hidden = !n;
+    $("#legacy-text").textContent = n ? `You have ${plural(n, "job")} saved in this browser from before. Sign in to move ${n === 1 ? "it" : "them"} into your account.` : "";
+    $("#w-note").textContent = n
+      ? `You have ${plural(n, "job")} saved in this browser from before. Sign in and ${n === 1 ? "it" : "they"}'ll move into your account.`
+      : "Guests can search and filter every job. Sign in to save jobs, add notes and track your applications.";
+  }
+
+  // The same sign-in form appears on the welcome page and in the sign-in dialog
+  function signInMarkup(key) {
+    return `
+      <form class="signin" novalidate>
+        <label class="field-label" for="email-${key}">Email</label>
+        <input class="input" id="email-${key}" name="email" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com" required>
+        <button class="btn btn-primary btn-block" type="submit">Email me a sign-in link</button>
+        <p class="form-msg" role="alert"></p>
+        ${CONFIG.googleSignIn ? `<div class="or">or</div><button class="btn btn-block" type="button" data-google>Continue with Google</button>` : ""}
+      </form>
+      <div class="sent" hidden tabindex="-1">
+        <h2>Check your email</h2>
+        <p>We sent a sign-in link to <b data-sent-to></b>. Open it to continue. The link works once.</p>
+        <button class="link" type="button" data-again>Use a different email</button>
+      </div>`;
+  }
+  $$("[data-signin]").forEach(box => { box.innerHTML = signInMarkup(box.dataset.signin); });
+
+  function resetSignInForms() {
+    for (const box of $$("[data-signin]")) {
+      $(".signin", box).hidden = false;
+      $(".sent", box).hidden = true;
+      $(".form-msg", box).textContent = "";
+    }
+  }
+
+  const redirectUrl = () => location.origin + location.pathname;
+
+  async function sendLink(form) {
+    const input = form.elements.email, btn = $("button[type=submit]", form), msg = $(".form-msg", form);
+    const email = input.value.trim();
+    msg.textContent = "";
+    input.removeAttribute("aria-invalid");
+    if (!sb) { msg.textContent = "Sign-in isn't available right now. Try again later."; return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      msg.textContent = "Enter a valid email address.";
+      input.setAttribute("aria-invalid", "true");
+      input.focus();
+      return;
+    }
+    btn.disabled = true;
+    btn.textContent = "Sending link…";
+    const { error } = await sb.auth.signInWithOtp({ email, options: { emailRedirectTo: redirectUrl() } });
+    btn.disabled = false;
+    btn.textContent = "Email me a sign-in link";
+    if (error) {
+      msg.textContent = error.status === 429 || /rate limit|security purposes/i.test(error.message)
+        ? "Too many sign-in emails. Wait a minute, then try again."
+        : error.message || "Couldn't send the link. Try again.";
+      return;
+    }
+    const box = form.closest("[data-signin]");
+    $("[data-sent-to]", box).textContent = email;
+    form.hidden = true;
+    const sent = $(".sent", box);
+    sent.hidden = false;
+    sent.focus();
+  }
+
+  // Google sign-in is ready but switched off until it is set up in Supabase (googleSignIn in config.js)
+  async function signInWithGoogle(form) {
+    const { error } = await sb.auth.signInWithOAuth({ provider: "google", options: { redirectTo: redirectUrl() } });
+    if (error) $(".form-msg", form).textContent = error.message || "Couldn't start Google sign-in.";
+  }
+
+  document.addEventListener("submit", e => {
+    const form = e.target.closest(".signin");
+    if (form) { e.preventDefault(); sendLink(form); }
+  });
+  document.addEventListener("click", e => {
+    if (e.target.closest("[data-google]")) { const f = e.target.closest(".signin"); if (sb) signInWithGoogle(f); return; }
+    const again = e.target.closest("[data-again]");
+    if (again) {
+      const box = again.closest("[data-signin]");
+      $(".sent", box).hidden = true;
+      $(".signin", box).hidden = false;
+      $("input", box).focus();
+      return;
+    }
+    if (e.target.closest("[data-open-signin]")) openSignIn();
+  });
+
+  function openSignIn(title) {
+    if (user) return;
+    $("#signin-title").textContent = title || "Sign in to save jobs";
+    const dlg = $("#signin-dlg");
+    if (!dlg.open) dlg.showModal();
+    const input = $("input", dlg);
+    if (!$(".signin", dlg).hidden) input.focus();
+  }
+  $("#signin-dlg").addEventListener("click", e => { if (e.target.closest("[data-close]") || e.target === e.currentTarget) $("#signin-dlg").close(); });
+
+  function prep(j) {
+    j.days = daysAgo(j.posted);
+    j.hay = norm([j.title, j.company, j.location, j.city, j.state, j.country].join(" "));
+    return j;
+  }
+
+  function showError(err) {
+    $("#results-title").textContent = "Couldn't load jobs";
+    $("#results").innerHTML = `<div class="empty"><h2>Couldn't load jobs</h2>
+      <p>The list is read from data.json next to this page. If you opened the file directly, serve the folder instead: <code>python -m http.server --directory site</code></p>
+      <button class="btn" type="button" onclick="location.reload()">Try again</button>
+      <p style="margin-top:12px;font-size:12px;color:var(--text-3)">${esc(err.message)}</p></div>`;
+  }
+
+  // ---------- Filtering ----------
+  // Tracked jobs that have dropped out of today's data are still shown in Saved, Applied and Interviewing
+  function pool() {
+    const out = state.jobs.slice();
+    for (const [id, rec] of Object.entries(tracker)) {
+      if (!state.byId.has(id) && rec.job) out.push(prep({ ...rec.job, id, gone: true }));
+    }
+    return out;
+  }
+  const statusOf = id => (tracker[id] && tracker[id].status) || "";
+  function inTab(j, tab) {
+    if (tab === "all") return !j.gone;
+    if (tab === "fresher") return !j.gone && j.group === "Fresher";
+    if (tab === "experienced") return !j.gone && j.group !== "Fresher";
+    return statusOf(j.id) === tab;
+  }
+  function matchSearch(j, words) { return words.every(w => j.hay.includes(w)); }
+  function postedOk(j, p) {
+    if (p === "any") return true;
+    if (j.days == null) return false;
+    return p === "1" ? j.days === 0 : j.days <= Number(p);
+  }
+  // Bit mask of the filter groups a job fails; lets each group count options with the other filters applied
+  function failMask(j) {
+    let m = 0;
+    if (!postedOk(j, state.posted)) m |= 1;
+    SET_GROUPS.forEach((g, i) => {
+      const s = state.sel[g.key];
+      if (s.size && !s.has(g.get(j))) m |= 1 << (i + 1);
+    });
+    return m;
+  }
+
+  function compute() {
+    const words = norm(state.q).split(/\s+/).filter(Boolean);
+    const all = pool();
+    const tabCounts = Object.fromEntries(TABS.map(t => [t, 0]));
+    const facet = Object.fromEntries(SET_GROUPS.map(g => [g.key, new Map()]));
+    const postedCounts = Object.fromEntries(POSTED.map(([k]) => [k, 0]));
+    const list = [];
+    for (const j of all) {
+      if (words.length && !matchSearch(j, words)) continue;
+      const m = failMask(j);
+      if (m === 0) for (const t of TABS) if (inTab(j, t)) tabCounts[t]++;
+      if (!inTab(j, state.tab)) continue;
+      if (m === 0) list.push(j);
+      if ((m & ~1) === 0) for (const [k] of POSTED) if (postedOk(j, k)) postedCounts[k]++;
+      SET_GROUPS.forEach((g, i) => {
+        if ((m & ~(1 << (i + 1))) !== 0) return;
+        const v = g.get(j);
+        if (v == null || v === "") return;
+        const f = facet[g.key];
+        f.set(v, (f.get(v) || 0) + 1);
+      });
+    }
+    sortList(list);
+    return { list, tabCounts, facet, postedCounts };
+  }
+
+  function sortList(list) {
+    const by = state.sort;
+    const upd = j => (tracker[j.id] && tracker[j.id].updated) || 0;
+    const date = (a, b) => (b.posted || "").localeCompare(a.posted || "");
+    list.sort((a, b) =>
+      by === "company" ? a.company.localeCompare(b.company) || date(a, b) :
+      by === "added" ? (b.first_seen || "").localeCompare(a.first_seen || "") || date(a, b) :
+      by === "updated" ? upd(b) - upd(a) || date(a, b) :
+      date(a, b) || (b.first_seen || "").localeCompare(a.first_seen || ""));
+  }
+
+  const activeCount = () => (state.posted !== "any" ? 1 : 0) + SET_GROUPS.reduce((n, g) => n + state.sel[g.key].size, 0);
+
+  // ---------- Rendering ----------
+  let last = null;
+  function render() {
+    last = compute();
+    renderTabs(last.tabCounts);
+    renderGroups(last);
+    renderChips();
+    renderHead(last.list.length);
+    renderList(last.list);
+    writeUrl();
+  }
+
+  function renderTabs(counts) {
+    for (const b of $$("#tabs [role=tab]")) {
+      const on = b.dataset.tab === state.tab;
+      b.setAttribute("aria-selected", on);
+      b.tabIndex = on ? 0 : -1;
+      const tracking = TRACK_TABS.includes(b.dataset.tab);
+      $(".count", b).textContent = tracking && (!user || !trackerReady) ? "" : fmt(counts[b.dataset.tab]);
+    }
+    $("#results").setAttribute("aria-labelledby", "tab-" + state.tab);
+  }
+
+  function renderHead(n) {
+    const tracking = !["all", "fresher", "experienced"].includes(state.tab);
+    $("#results-title").textContent = plural(n, tracking ? "tracked job" : "job");
+    $("#results-hint").textContent = TAB_HINT[state.tab] || (state.meta.data_date ? `Updated ${prettyDate(state.meta.data_date)}` : "");
+    const a = activeCount();
+    $("#filters-n").hidden = !a;
+    $("#filters-n").textContent = a;
+    $$("[data-clear=all]").forEach(b => { if (b.classList.contains("link")) b.hidden = !a; });
+    $("#drawer-done").textContent = `Show ${plural(n, "job")}`;
+    $("#sort").value = state.sort;
+  }
+
+  // Filter groups: built once, then only the option lists are refreshed, so typing and focus survive
+  function buildGroups() {
+    $("#groups").innerHTML = GROUPS.map(g => {
+      const open = !state.collapsed.has(g.key) || (g.radio ? state.posted !== "any" : state.sel[g.key].size > 0);
+      if (!open) state.collapsed.add(g.key); else state.collapsed.delete(g.key);
+      return `
+      <section class="group" data-group="${g.key}">
+        <div class="g-head">
+          <button class="g-toggle" type="button" aria-expanded="${open}" aria-controls="g-${g.key}">
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg>
+            ${esc(g.label)} <span class="g-sel" data-sel></span>
+          </button>
+          <button class="link" type="button" data-clear="${g.key}" hidden>Clear<span class="sr-only"> ${esc(g.label)}</span></button>
+        </div>
+        <div class="g-body" id="g-${g.key}" ${open ? "" : "hidden"}>
+          ${g.find ? `<input class="g-find" type="search" data-find="${g.key}" placeholder="Find ${esc(g.label.toLowerCase())}" aria-label="Find ${esc(g.label.toLowerCase())}" autocomplete="off">` : ""}
+          <ul class="opts" data-opts role="${g.radio ? "radiogroup" : "group"}" aria-label="${esc(g.label)}"></ul>
+          <div class="g-more"></div>
+        </div>
+      </section>`;
+    }).join("");
+  }
+
+  function renderGroups({ facet, postedCounts }) {
+    const focusKey = document.activeElement && document.activeElement.dataset && document.activeElement.dataset.fk;
+    for (const g of GROUPS) {
+      const sec = $(`[data-group="${g.key}"]`);
+      const ul = $("[data-opts]", sec);
+      const more = $(".g-more", sec);
+      const selCount = g.radio ? (state.posted !== "any" ? 1 : 0) : state.sel[g.key].size;
+      $("[data-sel]", sec).textContent = selCount ? (g.radio ? "· " + POSTED.find(p => p[0] === state.posted)[1] : "· " + selCount) : "";
+      $(`[data-clear="${g.key}"]`, sec).hidden = !selCount;
+
+      if (g.radio) {
+        ul.innerHTML = POSTED.map(([k, label]) => `
+          <li><label class="opt${postedCounts[k] ? "" : " zero"}">
+            <input type="radio" name="posted" value="${k}" data-fk="posted:${k}" ${state.posted === k ? "checked" : ""}>
+            <span class="name">${label}</span><span class="n num">${fmt(postedCounts[k])}</span>
+          </label></li>`).join("");
+        continue;
+      }
+
+      const counts = facet[g.key];
+      const sel = state.sel[g.key];
+      let opts = [...counts.entries()];
+      for (const v of sel) if (!counts.has(v)) opts.push([v, 0]);           // keep selected options visible
+      if (g.order) opts.sort((a, b) => g.order.indexOf(a[0]) - g.order.indexOf(b[0]));
+      else opts.sort((a, b) => b[1] - a[1] || String(a[0]).localeCompare(String(b[0])));
+      const find = norm(state.finds[g.key] || "");
+      if (find) opts = opts.filter(([v]) => norm(g.name ? g.name(v) : v).includes(find));
+      // Selected first, then by count; long lists show the top few until expanded
+      if (!g.order) opts.sort((a, b) => (sel.has(b[0]) - sel.has(a[0])));
+      const limit = g.find && !state.expanded.has(g.key) && !find ? 6 : 200;
+      const shown = opts.slice(0, limit);
+      ul.classList.toggle("scroll", state.expanded.has(g.key) && opts.length > 10);
+      ul.innerHTML = shown.length ? shown.map(([v, n]) => `
+        <li><label class="opt${n ? "" : " zero"}">
+          <input type="checkbox" data-group="${g.key}" value="${esc(v)}" data-fk="${esc(g.key + ":" + v)}" ${sel.has(v) ? "checked" : ""}>
+          <span class="name" title="${esc(g.name ? g.name(v) : v)}">${esc(g.name ? g.name(v) : v)}</span><span class="n num">${fmt(n)}</span>
+        </label></li>`).join("") : `<li class="g-empty">${find ? "No matches" : "None for these filters"}</li>`;
+      more.innerHTML = g.find && !find && opts.length > 6
+        ? `<button class="link" type="button" data-expand="${g.key}">${state.expanded.has(g.key) ? "Show fewer" : `Show all ${fmt(opts.length)}`}</button>` : "";
+    }
+    if (focusKey) {
+      const el = $$("[data-fk]").find(e => e.dataset.fk === focusKey);
+      if (el) el.focus();
+    }
+  }
+
+  function renderChips() {
+    const chips = [];
+    if (state.posted !== "any") chips.push(["posted", state.posted, "Posted", POSTED.find(p => p[0] === state.posted)[1]]);
+    for (const g of SET_GROUPS) for (const v of state.sel[g.key]) chips.push([g.key, v, g.label, g.name ? g.name(v) : v]);
+    $("#chips").innerHTML = chips.length ? chips.map(([k, v, label, text]) => `
+      <button class="chip" type="button" data-chip="${esc(k)}" data-value="${esc(v)}" aria-label="Remove filter ${esc(label)}: ${esc(text)}">
+        <span>${esc(label)}:</span> ${esc(text)}
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg>
+      </button>`).join("") + (chips.length > 1 ? `<button class="chip-clear" type="button" data-clear="all">Clear all</button>` : "") : "";
+  }
+
+  function card(j) {
+    const rec = tracker[j.id] || {};
+    const st = rec.status || "";
+    const noteOpen = state.openNotes.has(j.id);
+    const meta = [
+      j.location || [j.city, j.state, j.country].filter(Boolean).join(", ") || "Location not listed",
+      j.workplace && !(j.location || "").toLowerCase().includes(j.workplace.toLowerCase()) ? j.workplace : null,
+      j.level && j.level !== "Not specified" ? j.level : null,
+      sourceName(j.source),
+      j.days != null ? (j.days === 0 ? "Posted today" : `Posted ${agoText(j.days).toLowerCase()}`) : null,
+      st && st !== "saved" && rec.applied_at ? `Applied ${prettyDate(rec.applied_at)}` : st && rec.saved_at ? `Saved ${prettyDate(rec.saved_at)}` : null,
+    ].filter(Boolean);
+    const url = esc(safeUrl(j.url));
+    const t = esc(j.title), c = esc(j.company);
+    const actions = user
+      ? `<select class="select status${st ? " on" : ""}" data-status aria-label="Status for ${t} at ${c}">
+          ${STATUSES.map(([v, l]) => `<option value="${v}" ${v === st ? "selected" : ""}>${l}</option>`).join("")}
+        </select>
+        <button class="btn" type="button" data-note-toggle aria-expanded="${noteOpen}" aria-label="${rec.note ? "Edit note" : "Add note"} for ${t}">Note</button>`
+      : `<button class="btn" type="button" data-guest-save aria-label="Save ${t} at ${c}">Save</button>`;
+    return `
+    <li class="job${st ? " tracked" : ""}" data-id="${esc(j.id)}" tabindex="-1">
+      <div>
+        <h3 class="j-title"><a href="${url}" target="_blank" rel="noopener" tabindex="-1">${t}</a>${j.new ? `<span class="tag tag-new">New</span>` : ""}${j.gone ? `<span class="tag tag-gone">No longer listed</span>` : ""}</h3>
+        <div class="j-company">${c}</div>
+        <div class="j-meta">${meta.map(m => `<span>${esc(m)}</span>`).join("")}</div>
+      </div>
+      <div class="j-actions">
+        <a class="btn btn-primary apply" href="${url}" target="_blank" rel="noopener" aria-label="Apply: ${t} at ${c} (opens in a new tab)">Apply</a>
+        ${actions}
+      </div>
+      ${noteOpen ? `
+        <div class="note-edit">
+          <label class="sr-only" for="note-${esc(j.id)}">Note for ${t}</label>
+          <textarea id="note-${esc(j.id)}" data-note maxlength="500" placeholder="Referral, contact, next step…">${esc(rec.note || "")}</textarea>
+          <div class="note-row"><span data-note-state>${rec.note ? "Saved" : "Notes save as you type"}</span><button class="link" type="button" data-note-done>Done</button></div>
+        </div>` : rec.note ? `<button class="j-note" type="button" data-note-toggle aria-label="Edit note for ${t}">${esc(rec.note)}</button>` : ""}
+    </li>`;
+  }
+
+  function emptyState() {
+    const filtered = activeCount() || state.q.trim();
+    const tracking = TRACK_TABS.includes(state.tab);
+    if (tracking && !user) {
+      return `<div class="empty"><h2>Sign in to track jobs</h2><p>Save jobs, add notes and keep track of where you've applied. Your list is kept in your account.</p><button class="btn btn-primary" type="button" data-open-signin>Sign in</button></div>`;
+    }
+    if (tracking && !trackerReady) {
+      return `<div class="empty"><h2>Loading your jobs</h2><p>This only takes a moment.</p></div>`;
+    }
+    const total = tracking ? Object.values(tracker).filter(r => r.status === state.tab).length : 0;
+    if (tracking && !total) {
+      const word = STATUS_LABEL[state.tab].toLowerCase();
+      return `<div class="empty"><h2>Nothing ${word} yet</h2><p>Use the status menu on any job to mark it as ${word}.</p><button class="btn" type="button" data-goto="all">Browse jobs</button></div>`;
+    }
+    if (filtered) {
+      const hidden = tracking ? `${plural(total, "job")} hidden by your search or filters.` : "Try removing a filter or changing the search.";
+      return `<div class="empty"><h2>No jobs match</h2><p>${hidden}</p><button class="btn" type="button" data-clear="everything">Clear search and filters</button></div>`;
+    }
+    return `<div class="empty"><h2>No jobs here right now</h2><p>Check back after the next daily update.</p></div>`;
+  }
+
+  function renderList(list) {
+    const shown = list.slice(0, state.limit);
+    const box = $("#results");
+    if (!list.length) { box.innerHTML = emptyState(); return; }
+    box.innerHTML = `<ul class="jobs">${shown.map(card).join("")}</ul>` +
+      (list.length > shown.length ? `<div class="more-wrap"><button class="btn" type="button" id="more">Show ${fmt(Math.min(PAGE, list.length - shown.length))} more <span style="color:var(--text-3)">of ${fmt(list.length - shown.length)}</span></button></div>` : "");
+  }
+
+  function rerenderCard(id) {
+    const li = $(`.job[data-id="${CSS.escape(id)}"]`);
+    if (!li) return null;
+    const j = state.byId.get(id) || (last && last.list.find(x => x.id === id));
+    if (!j) return null;
+    const tmp = document.createElement("ul");
+    tmp.innerHTML = card(j);
+    const fresh = tmp.firstElementChild;
+    li.replaceWith(fresh);
+    return fresh;
+  }
+
+  function renderCredits() {
+    const used = state.sources.filter(s => s.jobs > 0);
+    if (used.length) {
+      const links = used.map(s => `<a href="${esc(safeUrl(s.url))}" target="_blank" rel="noopener">${s.id === "adzuna" ? "Jobs by Adzuna" : esc(s.name)}</a>`);
+      $("#credits").innerHTML = `Jobs from ${links.slice(0, -1).join(", ")}${links.length > 1 ? " and " : ""}${links[links.length - 1]}. Listings belong to the employers and job boards that published them.`;
+    }
+    $("#updated").textContent = state.meta.data_date ? `Updated ${prettyDate(state.meta.data_date)}` : "";
+    $("#w-stats").textContent = [plural(state.jobs.length, "open job"), used.length ? plural(used.length, "source") : null,
+      state.meta.data_date ? `Updated ${prettyDate(state.meta.data_date)}` : null].filter(Boolean).join(" · ");
+  }
+
+  // ---------- Changing things ----------
+  function refresh(resetLimit = true) {
+    if (resetLimit) state.limit = PAGE;
+    render();
+  }
+
+  function setTab(tab, focus) {
+    if (!TABS.includes(tab)) return;
+    state.tab = tab;
+    if (tab === "saved" || tab === "applied" || tab === "interviewing") {
+      if (state.sort === "posted") state.sort = "updated";
+    } else if (state.sort === "updated") state.sort = "posted";
+    refresh();
+    if (focus) $(`#tab-${tab}`).focus();
+  }
+
+  function clearFilters(key) {
+    if (key === "all" || key === "everything") {
+      state.posted = "any";
+      SET_GROUPS.forEach(g => state.sel[g.key].clear());
+      if (key === "everything") { state.q = ""; $("#q").value = ""; syncSearchUi(); }
+    } else if (key === "posted") state.posted = "any";
+    else if (state.sel[key]) state.sel[key].clear();
+    refresh();
+  }
+
+  let undo = null;
+  function changeStatus(id, status, opts = {}) {
+    if (!user) { openSignIn(); return; }
+    const prev = setRecord(id, { status });
+    const label = status ? `Marked as ${STATUS_LABEL[status].toLowerCase()}` : "Removed from your lists";
+    undo = { id, prev };
+    toast(label, true);
+    const inTracking = ["saved", "applied", "interviewing"].includes(state.tab);
+    if (inTracking && status !== state.tab) {
+      // The job leaves this list: re-render and move focus to its neighbour
+      const li = $(`.job[data-id="${CSS.escape(id)}"]`);
+      const next = li && (li.nextElementSibling || li.previousElementSibling);
+      const nextId = next && next.dataset.id;
+      refresh(false);
+      const target = nextId && $(`.job[data-id="${CSS.escape(nextId)}"]`);
+      (target || $("#tab-" + state.tab)).focus();
+    } else {
+      last = compute();
+      renderTabs(last.tabCounts);
+      renderGroups(last);
+      const fresh = rerenderCard(id);
+      if (fresh && opts.refocus) (opts.refocus === "card" ? fresh : $("[data-status]", fresh)).focus();
+    }
+  }
+
+  function doUndo() {
+    if (!undo) return;
+    const { id, prev } = undo;
+    if (prev) tracker[id] = prev; else delete tracker[id];
+    persist(id);
+    undo = null;
+    hideToast();
+    refresh(false);
+  }
+
+  let toastTimer;
+  function toast(text, canUndo) {
+    $("#toast-text").textContent = text;
+    $("#toast-undo").hidden = !canUndo;
+    $("#toast").hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(hideToast, 5000);
+  }
+  function hideToast() { $("#toast").hidden = true; }
+  $("#toast-undo").addEventListener("click", doUndo);
+
+  function toggleNote(id, open) {
+    if (!user) { openSignIn("Sign in to add notes"); return; }
+    const willOpen = open ?? !state.openNotes.has(id);
+    if (willOpen) state.openNotes.add(id); else state.openNotes.delete(id);
+    const fresh = rerenderCard(id);
+    if (!fresh) return;
+    if (willOpen) { const ta = $("[data-note]", fresh); ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length); }
+    else $("[data-note-toggle]", fresh).focus();
+  }
+
+  const saveNote = debounce((id, value, stateEl) => {
+    if (!user) return;
+    const rec = tracker[id] || {};
+    // Writing a note on a job you haven't tracked yet saves it
+    const patch = { note: value.trim() ? value : "" };
+    if (!rec.status && value.trim()) patch.status = "saved";
+    setRecord(id, patch);
+    if (stateEl && stateEl.isConnected) stateEl.textContent = value.trim() ? (patch.status ? "Saved, and added to Saved" : "Saved") : "Note removed";
+    last = compute();
+    renderTabs(last.tabCounts);
+    const li = stateEl && stateEl.closest(".job");
+    if (li) {
+      li.classList.toggle("tracked", !!(tracker[id] && tracker[id].status));
+      const sel = $("[data-status]", li);
+      sel.value = (tracker[id] && tracker[id].status) || "";
+      sel.classList.toggle("on", !!sel.value);
+    }
+  }, 350);
+
+  // ---------- Events ----------
+  const onSearch = debounce(() => refresh(), 140);
+  function syncSearchUi() {
+    const has = !!$("#q").value;
+    $("#q-clear").hidden = !has;
+    $("#q-kbd").hidden = has || document.activeElement === $("#q");
+  }
+  $("#q").addEventListener("input", e => { state.q = e.target.value; syncSearchUi(); onSearch(); });
+  $("#q").addEventListener("focus", syncSearchUi);
+  $("#q").addEventListener("blur", syncSearchUi);
+  $("#q").addEventListener("keydown", e => {
+    if (e.key === "Escape") { if (e.target.value) { e.target.value = ""; state.q = ""; syncSearchUi(); refresh(); } else e.target.blur(); }
+    if (e.key === "Enter") { const first = $(".job"); if (first) { e.preventDefault(); first.focus(); } }
+  });
+  $("#q-clear").addEventListener("click", () => { $("#q").value = ""; state.q = ""; syncSearchUi(); refresh(); $("#q").focus(); });
+  $("#sort").addEventListener("change", e => { state.sort = e.target.value; refresh(); });
+
+  // Tabs: click, and arrow keys move between them
+  $("#tabs").addEventListener("click", e => { const b = e.target.closest("[role=tab]"); if (b) setTab(b.dataset.tab); });
+  $("#tabs").addEventListener("keydown", e => {
+    const i = TABS.indexOf(state.tab);
+    let n = null;
+    if (e.key === "ArrowRight") n = (i + 1) % TABS.length;
+    else if (e.key === "ArrowLeft") n = (i - 1 + TABS.length) % TABS.length;
+    else if (e.key === "Home") n = 0;
+    else if (e.key === "End") n = TABS.length - 1;
+    if (n != null) { e.preventDefault(); setTab(TABS[n], true); }
+  });
+
+  // Filter panel
+  $("#filters").addEventListener("change", e => {
+    const t = e.target;
+    if (t.name === "posted") { state.posted = t.value; refresh(); return; }
+    if (t.dataset.group) {
+      const s = state.sel[t.dataset.group];
+      if (t.checked) s.add(t.value); else s.delete(t.value);
+      refresh();
+    }
+  });
+  $("#filters").addEventListener("input", e => {
+    const k = e.target.dataset.find;
+    if (k) { state.finds[k] = e.target.value; renderGroups(last); }
+  });
+  $("#filters").addEventListener("click", e => {
+    const tog = e.target.closest(".g-toggle");
+    if (tog) {
+      const key = tog.closest("[data-group]").dataset.group;
+      const open = tog.getAttribute("aria-expanded") !== "true";
+      tog.setAttribute("aria-expanded", open);
+      $("#g-" + key).hidden = !open;
+      if (open) state.collapsed.delete(key); else state.collapsed.add(key);
+      return;
+    }
+    const ex = e.target.closest("[data-expand]");
+    if (ex) {
+      const k = ex.dataset.expand;
+      if (state.expanded.has(k)) state.expanded.delete(k); else state.expanded.add(k);
+      renderGroups(last);
+      const again = $(`[data-expand="${k}"]`);
+      if (again) again.focus();
+    }
+  });
+
+  // Anything with data-clear, chips, "show more", empty-state buttons
+  document.addEventListener("click", e => {
+    const c = e.target.closest("[data-clear]");
+    if (c) { clearFilters(c.dataset.clear); return; }
+    const chip = e.target.closest("[data-chip]");
+    if (chip) {
+      const k = chip.dataset.chip, v = chip.dataset.value;
+      const nextChip = chip.nextElementSibling && chip.nextElementSibling.dataset.chip ? chip.nextElementSibling : chip.previousElementSibling;
+      const focusKey = nextChip && nextChip.dataset.chip ? [nextChip.dataset.chip, nextChip.dataset.value] : null;
+      if (k === "posted") state.posted = "any"; else state.sel[k].delete(v);
+      refresh();
+      const target = focusKey && $$("[data-chip]").find(x => x.dataset.chip === focusKey[0] && x.dataset.value === focusKey[1]);
+      (target || $("#q")).focus();
+      return;
+    }
+    if (e.target.closest("#more")) {
+      const count = $$(".job").length;
+      state.limit += PAGE;
+      renderList(last.list);
+      const next = $$(".job")[count];
+      if (next) next.focus();
+      return;
+    }
+    const go = e.target.closest("[data-goto]");
+    if (go) { setTab(go.dataset.goto, true); return; }
+  });
+
+  // Job cards
+  $("#results").addEventListener("change", e => {
+    const sel = e.target.closest("[data-status]");
+    if (sel) changeStatus(sel.closest(".job").dataset.id, sel.value, { refocus: "select" });
+  });
+  $("#results").addEventListener("click", e => {
+    const t = e.target.closest("[data-note-toggle]");
+    if (t) { toggleNote(t.closest(".job").dataset.id); return; }
+    if (e.target.closest("[data-note-done]")) { toggleNote(e.target.closest(".job").dataset.id, false); return; }
+    if (e.target.closest("[data-guest-save]")) openSignIn();
+  });
+  $("#results").addEventListener("input", e => {
+    if (e.target.matches("[data-note]")) {
+      const li = e.target.closest(".job");
+      $("[data-note-state]", li).textContent = "Saving…";
+      saveNote(li.dataset.id, e.target.value, $("[data-note-state]", li));
+    }
+  });
+  $("#results").addEventListener("keydown", e => {
+    if (e.target.matches("[data-note]") && e.key === "Escape") { e.stopPropagation(); toggleNote(e.target.closest(".job").dataset.id, false); }
+  });
+
+  // Mobile filter drawer
+  const drawer = $("#filters");
+  const outside = () => [$(".top"), $(".segments"), $("#main"), $("footer")];
+  const isDrawerMode = () => matchMedia("(max-width: 960px)").matches;
+  function openDrawer() {
+    if (!isDrawerMode()) { const first = $("#groups input, #groups button"); if (first) first.focus(); return; }
+    drawer.classList.add("open");
+    $("#scrim").hidden = false;
+    outside().forEach(el => { el.inert = true; });
+    $("#filters-btn").setAttribute("aria-expanded", "true");
+    document.body.style.overflow = "hidden";
+    setTimeout(() => $("#drawer-close").focus(), 50);
+  }
+  function closeDrawer() {
+    if (!drawer.classList.contains("open")) return;
+    drawer.classList.remove("open");
+    $("#scrim").hidden = true;
+    outside().forEach(el => { el.inert = false; });
+    $("#filters-btn").setAttribute("aria-expanded", "false");
+    document.body.style.overflow = "";
+    $("#filters-btn").focus();
+  }
+  $("#filters-btn").addEventListener("click", openDrawer);
+  $("#drawer-close").addEventListener("click", closeDrawer);
+  $("#drawer-done").addEventListener("click", closeDrawer);
+  $("#scrim").addEventListener("click", closeDrawer);
+  matchMedia("(max-width: 960px)").addEventListener("change", () => closeDrawer());
+
+  // Account menu
+  const menuBtn = $("#acct-btn"), menu = $("#acct-menu");
+  function openMenu() { menu.hidden = false; menuBtn.setAttribute("aria-expanded", "true"); $("button", menu).focus(); }
+  function closeMenu(focusBtn) { if (menu.hidden) return; menu.hidden = true; menuBtn.setAttribute("aria-expanded", "false"); if (focusBtn) menuBtn.focus(); }
+  menuBtn.addEventListener("click", () => (menu.hidden ? openMenu() : closeMenu()));
+  menu.addEventListener("keydown", e => {
+    const items = $$("button", menu), i = items.indexOf(document.activeElement);
+    if (e.key === "ArrowDown") { e.preventDefault(); items[(i + 1) % items.length].focus(); }
+    else if (e.key === "ArrowUp") { e.preventDefault(); items[(i - 1 + items.length) % items.length].focus(); }
+    else if (e.key === "Escape") { e.preventDefault(); closeMenu(true); }
+    else if (e.key === "Tab") closeMenu();
+  });
+  document.addEventListener("click", e => { if (!e.target.closest(".menu-wrap")) closeMenu(); });
+  menu.addEventListener("click", e => {
+    const a = e.target.closest("[data-action]");
+    if (!a) return;
+    closeMenu(true);
+    if (a.dataset.action === "csv") exportCsv();
+    if (a.dataset.action === "backup") downloadBackup();
+    if (a.dataset.action === "restore") $("#restore-file").click();
+    if (a.dataset.action === "keys") $("#keys-dlg").showModal();
+    if (a.dataset.action === "signout") signOut();
+  });
+  $("#keys-dlg").addEventListener("click", e => { if (e.target.closest("[data-close]") || e.target === e.currentTarget) $("#keys-dlg").close(); });
+
+  // ---------- Export, backup and restore ----------
+  function download(name, text, type) {
+    const url = URL.createObjectURL(new Blob([text], { type }));
+    const a = Object.assign(document.createElement("a"), { href: url, download: name });
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+  const stamp = () => new Date().toISOString().slice(0, 10);
+  function exportCsv() {
+    const rows = Object.entries(tracker).filter(([, r]) => r.job);
+    if (!rows.length) { toast("Nothing to export yet. Save or mark a job first."); return; }
+    const cell = v => `"${String(v ?? "").replace(/"/g, '""')}"`;
+    const head = ["Status", "Title", "Company", "Location", "Workplace", "Level", "Source", "Posted", "Updated", "Still listed", "Note", "Link"];
+    const lines = rows
+      .sort((a, b) => (b[1].updated || 0) - (a[1].updated || 0))
+      .map(([id, r]) => [STATUS_LABEL[r.status || ""], r.job.title, r.job.company, r.job.location, r.job.workplace, r.job.level,
+        sourceName(r.job.source), r.job.posted, r.updated ? new Date(r.updated).toISOString().slice(0, 10) : "",
+        state.byId.has(id) ? "Yes" : "No", r.note, r.job.url].map(cell).join(","));
+    download(`signalstack-jobs-${stamp()}.csv`, "﻿" + [head.map(cell).join(","), ...lines].join("\r\n"), "text/csv;charset=utf-8");
+    toast(`Exported ${plural(rows.length, "job")}`);
+  }
+  function downloadBackup() {
+    const n = Object.keys(tracker).length;
+    download(`signalstack-backup-${stamp()}.json`, JSON.stringify({ app: "signalstack", version: 1, exported_at: new Date().toISOString(), jobs: tracker }, null, 2), "application/json");
+    toast(`Backup downloaded (${plural(n, "job")})`);
+  }
+  $("#restore-file").addEventListener("change", async e => {
+    const file = e.target.files[0];
+    e.target.value = "";
+    if (!file) return;
+    if (!user) return;
+    let data;
+    try {
+      data = JSON.parse(await file.text());
+      if (!data || data.app !== "signalstack" || typeof data.jobs !== "object" || !data.jobs) throw new Error("not a SignalStack backup");
+    } catch (err) {
+      toast("Couldn't restore that file. Choose a backup downloaded from SignalStack.");
+      return;
+    }
+    try {
+      const { added, updated } = await importRecords(data.jobs);
+      refresh(false);
+      toast(`Restored: ${plural(added, "job")} added, ${fmt(updated)} updated`);
+    } catch (err) {
+      console.error(err);
+      toast("Couldn't save the restored jobs to your account. Try again.");
+    }
+  });
+  const snapshotFrom = o => Object.fromEntries(SNAPSHOT_FIELDS.map(k => [k, o[k] == null ? null : String(o[k])]));
+
+  // ---------- Keyboard shortcuts ----------
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") {
+      if (drawer.classList.contains("open")) { closeDrawer(); return; }
+    }
+    if (e.ctrlKey || e.metaKey || e.altKey || view !== "app") return;
+    const el = document.activeElement;
+    const typing = el && (/^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName) || el.isContentEditable);
+    if (typing || $("dialog[open]")) return;
+    const cards = $$(".job");
+    const cur = el && el.closest && el.closest(".job");
+    const idx = cur ? cards.indexOf(cur) : -1;
+    const k = e.key;
+    if (k === "/") { e.preventDefault(); $("#q").focus(); $("#q").select(); }
+    else if (k === "?") { e.preventDefault(); $("#keys-dlg").showModal(); }
+    else if (k === "j" || k === "k") {
+      if (!cards.length) return;
+      e.preventDefault();
+      const n = k === "j" ? Math.min(cards.length - 1, idx + 1) : Math.max(0, idx < 0 ? 0 : idx - 1);
+      cards[n].focus();
+      cards[n].scrollIntoView({ block: "nearest" });
+    }
+    else if (k >= "1" && k <= "6") { e.preventDefault(); setTab(TABS[Number(k) - 1], true); }
+    else if (k === "f") { e.preventDefault(); openDrawer(); }
+    else if (cur && (k === "o" || k === "Enter") && el === cur) { e.preventDefault(); $(".apply", cur).click(); }
+    else if (cur && k === "s") { e.preventDefault(); const id = cur.dataset.id; changeStatus(id, statusOf(id) === "saved" ? "" : "saved", { refocus: "card" }); }
+    else if (cur && k === "a") { e.preventDefault(); changeStatus(cur.dataset.id, "applied", { refocus: "card" }); }
+    else if (cur && k === "n") { e.preventDefault(); toggleNote(cur.dataset.id, true); }
+  });
+
+  // ---------- Filters in the address bar, so a view can be bookmarked ----------
+  function readUrl() {
+    const p = new URLSearchParams(location.search);
+    if (TABS.includes(p.get("tab"))) state.tab = p.get("tab");
+    state.q = p.get("q") || "";
+    $("#q").value = state.q;
+    if (["posted", "added", "updated", "company"].includes(p.get("sort"))) state.sort = p.get("sort");
+    if (POSTED.some(x => x[0] === p.get("posted"))) state.posted = p.get("posted");
+    for (const g of SET_GROUPS) for (const v of p.getAll(g.key)) state.sel[g.key].add(v);
+    syncSearchUi();
+  }
+  const writeUrl = debounce(() => {
+    const p = new URLSearchParams();
+    if (state.tab !== "all") p.set("tab", state.tab);
+    if (state.q.trim()) p.set("q", state.q.trim());
+    if (state.sort !== "posted") p.set("sort", state.sort);
+    if (state.posted !== "any") p.set("posted", state.posted);
+    for (const g of SET_GROUPS) for (const v of state.sel[g.key]) p.append(g.key, v);
+    const qs = p.toString();
+    history.replaceState(null, "", qs ? "?" + qs : location.pathname);
+  }, 250);
+
+  init();
+})();
+</script>
+</body>
+</html>
