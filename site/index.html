@@ -1,0 +1,880 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SignalStack · Startup Hiring Signals</title>
+<meta name="description" content="Which startups are growing right now? Daily hiring signals from Greenhouse, Lever and Ashby.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07090d; --bg2:#0b0f16; --panel:#0d121b; --panel2:#111826; --line:#1b2432; --line2:#273244;
+  --text:#e7edf5; --muted:#8e9bae; --faint:#5d697b;
+  --accent:#3ef0a0; --accent-dim:rgba(62,240,160,.11); --accent2:#5ab4ff; --danger:#ff6b6b;
+  --eng:#3ef0a0; --sales:#ffb547; --mkt:#ff7eb6; --prod:#a78bfa; --other:#64748b;
+  --src-greenhouse:#34d399; --src-lever:#5ab4ff; --src-ashby:#c084fc;
+  --shadow:0 1px 0 rgba(255,255,255,.035) inset, 0 24px 48px -24px rgba(0,0,0,.7);
+  --radius:16px;
+  color-scheme:dark;
+}
+[data-theme="light"]{
+  --bg:#f3f5f8; --bg2:#eef1f5; --panel:#ffffff; --panel2:#fafbfd; --line:#e4e9f0; --line2:#d4dbe5;
+  --text:#0e1621; --muted:#566377; --faint:#8a95a5;
+  --accent:#07965c; --accent-dim:rgba(7,150,92,.09); --accent2:#1d6ae5; --danger:#d93d3d;
+  --eng:#07965c; --sales:#d18800; --mkt:#d1437c; --prod:#7a58e0; --other:#8391a5;
+  --src-greenhouse:#07965c; --src-lever:#1d6ae5; --src-ashby:#9333ea;
+  --shadow:0 1px 2px rgba(14,22,33,.04), 0 14px 34px -18px rgba(14,22,33,.2);
+  color-scheme:light;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg)}
+body{font-family:'Space Grotesk',system-ui,-apple-system,sans-serif;font-size:14px;line-height:1.45;color:var(--text);background:var(--bg);min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:44px 44px;opacity:.35;
+  -webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,#000 25%,transparent 75%);mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,#000 25%,transparent 75%)}
+body::after{content:"";position:fixed;top:-25vh;right:-15vw;width:75vw;height:70vh;pointer-events:none;z-index:0;background:radial-gradient(closest-side,var(--accent-dim),transparent)}
+button{font:inherit;color:inherit}
+.mono{font-family:'JetBrains Mono',ui-monospace,monospace;font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;flex:none}
+
+/* ---------- Top bar ---------- */
+.top{position:sticky;top:0;z-index:30;border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--bg) 74%,transparent);backdrop-filter:blur(14px) saturate(1.4);-webkit-backdrop-filter:blur(14px) saturate(1.4)}
+.top-in{max-width:1380px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:14px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;letter-spacing:-.02em;text-decoration:none;color:var(--text)}
+.status{display:inline-flex;align-items:center;gap:8px;padding:5px 11px;border:1px solid var(--line2);border-radius:999px;color:var(--muted);font-size:12px;white-space:nowrap}
+.live{width:7px;height:7px;border-radius:50%;background:var(--accent);animation:ping 2.2s ease-out infinite}
+@keyframes ping{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 65%,transparent)}100%{box-shadow:0 0 0 9px transparent}}
+.sp{flex:1}
+.kbtn{display:flex;align-items:center;gap:10px;padding:7px 8px 7px 12px;border:1px solid var(--line2);background:var(--panel);color:var(--muted);border-radius:11px;cursor:pointer;min-width:250px;transition:border-color .15s}
+.kbtn:hover{border-color:var(--accent)}
+.kbtn .t{flex:1;text-align:left}
+kbd{font-family:'JetBrains Mono',monospace;font-size:11px;padding:1px 6px;border:1px solid var(--line2);border-bottom-width:2px;border-radius:6px;color:var(--muted);background:var(--panel2)}
+.icon-btn{width:38px;height:38px;border-radius:11px;border:1px solid var(--line2);background:var(--panel);display:grid;place-items:center;cursor:pointer;transition:border-color .15s,transform .15s}
+.icon-btn:hover{border-color:var(--accent)}
+.icon-btn:active{transform:scale(.95)}
+
+/* ---------- Layout ---------- */
+.wrap{position:relative;z-index:1;max-width:1380px;margin:0 auto;padding:0 24px 56px}
+.hero{padding:44px 0 24px;display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+h1{font-size:clamp(30px,4.2vw,48px);line-height:1.04;letter-spacing:-.04em;font-weight:600;margin-top:12px;max-width:760px}
+h1 em{font-style:normal;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--muted);font-size:15px;max-width:580px;margin-top:12px}
+.hero-meta{display:flex;flex-direction:column;align-items:flex-end;gap:6px;color:var(--faint);font-size:12px}
+.hero-meta b{color:var(--text);font-weight:500}
+.panel{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.kpi{padding:18px 18px 16px;position:relative;overflow:hidden;animation:rise .6s cubic-bezier(.2,.8,.2,1) both;animation-delay:var(--d,0ms)}
+.kpi::after{content:"";position:absolute;inset:auto 0 0 0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:.0;transition:opacity .3s}
+.kpi:hover::after{opacity:.7}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}}
+.kpi-label{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.1em}
+.kpi-value{font-size:36px;font-weight:600;letter-spacing:-.04em;margin-top:10px;line-height:1}
+.kpi-sub{color:var(--faint);font-size:12px;margin-top:8px}
+.kpi-sub .up{color:var(--accent)} .kpi-sub .down{color:var(--danger)}
+.kpi-spark{position:absolute;right:16px;top:18px}
+.main{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(360px,1fr);gap:14px;margin-top:14px;align-items:start}
+.lower{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(360px,1fr);gap:14px;margin-top:14px}
+.p-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 18px 12px;flex-wrap:wrap}
+.p-title{font-weight:600;font-size:15px;letter-spacing:-.01em}
+.p-sub{color:var(--faint);font-size:12px;margin-top:2px}
+
+/* ---------- Controls ---------- */
+.controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:0 18px 14px}
+.input{background:var(--bg2);border:1px solid var(--line2);color:var(--text);border-radius:10px;padding:8px 12px;font:inherit;outline:none;transition:border-color .15s,box-shadow .15s}
+.input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-dim)}
+.search{position:relative;flex:1;min-width:180px}
+.search .input{width:100%;padding-left:34px}
+.search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--faint)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{padding:6px 11px;border-radius:999px;border:1px solid var(--line2);background:transparent;color:var(--muted);font-size:12px;cursor:pointer;text-transform:capitalize;transition:all .15s}
+.chip:hover{color:var(--text)}
+.chip.on{background:var(--accent-dim);color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,transparent)}
+select.input{cursor:pointer}
+
+/* ---------- Leaderboard ---------- */
+.thead,.row{display:grid;grid-template-columns:26px 34px minmax(110px,1.3fr) minmax(120px,1.2fr) 58px 58px 84px 60px;gap:12px;align-items:center;padding:0 18px}
+.thead{color:var(--faint);font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;padding-bottom:9px;border-bottom:1px solid var(--line)}
+.r{text-align:right}
+.rows{max-height:660px;overflow:auto;scrollbar-width:thin;scrollbar-color:var(--line2) transparent}
+.row{width:100%;min-height:60px;border:0;border-bottom:1px solid var(--line);background:transparent;text-align:left;cursor:pointer;position:relative;transition:background .15s;animation:rise .45s cubic-bezier(.2,.8,.2,1) both;animation-delay:var(--d,0ms)}
+.row:hover{background:color-mix(in srgb,var(--accent-dim) 55%,transparent)}
+.row:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.row.is-sel{background:var(--accent-dim)}
+.row.is-sel::before{content:"";position:absolute;left:0;top:12px;bottom:12px;width:3px;border-radius:0 3px 3px 0;background:var(--accent)}
+.rank{color:var(--faint);font-size:12px}
+.av{--h:160;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-weight:700;font-size:14px;flex:none;
+  background:hsl(var(--h) 70% 50% / .15);color:hsl(var(--h) 85% 68%);border:1px solid hsl(var(--h) 70% 55% / .3)}
+[data-theme="light"] .av{color:hsl(var(--h) 65% 36%);background:hsl(var(--h) 70% 50% / .12)}
+.av.lg{width:54px;height:54px;border-radius:15px;font-size:24px}
+.nm{display:flex;flex-direction:column;gap:4px;min-width:0}
+.nm b{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.src{--c:var(--other);font-family:'JetBrains Mono',monospace;font-size:9.5px;text-transform:uppercase;letter-spacing:.08em;padding:2px 6px;border-radius:5px;width:fit-content;color:var(--c);background:color-mix(in srgb,var(--c) 14%,transparent);border:1px solid color-mix(in srgb,var(--c) 25%,transparent)}
+.src-greenhouse{--c:var(--src-greenhouse)} .src-lever{--c:var(--src-lever)} .src-ashby{--c:var(--src-ashby)}
+.sc{display:flex;align-items:center;gap:10px}
+.bar{flex:1;height:6px;border-radius:99px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--accent2),var(--accent));transform-origin:left;animation:grow .9s cubic-bezier(.2,.8,.2,1) both}
+@keyframes grow{from{transform:scaleX(0)}}
+.sc b{font-size:13px;min-width:34px;text-align:right;font-weight:600}
+.num{text-align:right;color:var(--muted);font-size:13px}
+.c-spark{display:flex;justify-content:flex-end}
+.delta{font-family:'JetBrains Mono',monospace;font-size:11px;text-align:right;color:var(--faint)}
+.delta.up{color:var(--accent)} .delta.down{color:var(--danger)} .delta.is-new{color:var(--accent2)}
+.board-foot{display:flex;justify-content:space-between;padding:12px 18px;color:var(--faint);font-size:12px}
+
+/* ---------- Detail panel ---------- */
+.detail{position:sticky;top:78px;max-height:calc(100vh - 92px);overflow:auto;scrollbar-width:thin;scrollbar-color:var(--line2) transparent}
+.d-in{padding:20px;animation:fade .35s ease both}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}}
+.d-head{display:flex;align-items:center;gap:14px}
+.d-head h2{font-size:24px;letter-spacing:-.03em;font-weight:600;line-height:1.1}
+.d-meta{display:flex;gap:10px;align-items:center;margin-top:6px;color:var(--faint);font-size:12px}
+.ring{margin-left:auto;position:relative;width:92px;height:92px;flex:none}
+.ring svg{width:92px;height:92px}
+.ring-bg{fill:none;stroke:var(--line);stroke-width:8}
+.ring-fg{fill:none;stroke:url(#ringGrad);stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset 1s cubic-bezier(.2,.8,.2,1)}
+.ring-val{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.ring-val b{font-size:26px;font-weight:600;letter-spacing:-.04em;line-height:1}
+.ring-val span{font-size:9.5px;color:var(--faint);text-transform:uppercase;letter-spacing:.1em;margin-top:3px}
+.d-stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:18px}
+.stat{padding:10px;border-radius:11px;background:var(--bg2);border:1px solid var(--line)}
+.stat span{display:block;color:var(--faint);font-size:10px;text-transform:uppercase;letter-spacing:.08em}
+.stat b{display:block;font-size:17px;font-weight:600;margin-top:4px}
+.d-sec{margin-top:22px}
+.d-title{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.stack{display:flex;height:10px;border-radius:99px;overflow:hidden;gap:2px;background:var(--line)}
+.stack i{display:block;height:100%;min-width:3px;transition:filter .15s}
+.stack i:hover{filter:brightness(1.25)}
+.dbars{display:flex;flex-direction:column;gap:4px;margin-top:12px}
+.dbar{display:grid;grid-template-columns:10px 118px 1fr 44px 40px;gap:10px;align-items:center;padding:7px 8px;border-radius:9px;border:1px solid transparent;background:transparent;cursor:pointer;text-align:left;transition:all .15s}
+.dbar:hover{background:var(--bg2)}
+.dbar.on{background:var(--accent-dim);border-color:color-mix(in srgb,var(--accent) 35%,transparent)}
+.dk{font-size:13px}
+.dtrack{height:6px;border-radius:99px;background:var(--line);overflow:hidden}
+.dtrack i{display:block;height:100%;border-radius:inherit;transform-origin:left;animation:grow .7s cubic-bezier(.2,.8,.2,1) both}
+.dv{text-align:right;font-size:12px}
+.dp{text-align:right;font-size:11px;color:var(--faint)}
+.trend{width:100%;height:auto;display:block}
+.ax{font-family:'JetBrains Mono',monospace;font-size:10px;fill:var(--faint)}
+.note{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:11px;border:1px dashed var(--line2);color:var(--muted);font-size:12.5px}
+.pulse{width:8px;height:8px;border-radius:50%;background:var(--accent2);margin-top:5px;flex:none;animation:ping 2s infinite}
+.link-btn{background:none;border:0;color:var(--accent);font-size:11px;cursor:pointer;text-transform:none;letter-spacing:0}
+.jobs{display:flex;flex-direction:column;margin-top:10px;border:1px solid var(--line);border-radius:12px;overflow:auto;max-height:460px;scrollbar-width:thin;scrollbar-color:var(--line2) transparent}
+.job{display:flex;align-items:center;gap:12px;padding:11px 12px;border-bottom:1px solid var(--line);text-decoration:none;color:var(--text);transition:background .15s}
+.job:last-child{border-bottom:0}
+.job:hover{background:var(--bg2)}
+.job:hover .arr{transform:translate(2px,-2px);color:var(--accent)}
+.jt{flex:1;min-width:0}
+.jt b{display:block;font-weight:500;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.jt small{display:block;color:var(--faint);font-size:11.5px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.jt em{font-style:normal;color:var(--accent2)}
+.arr{color:var(--faint);transition:transform .15s,color .15s}
+.more{width:100%;padding:10px;border:0;background:var(--bg2);color:var(--accent);cursor:pointer;font-size:12px}
+.empty{padding:28px 18px;text-align:center;color:var(--faint)}
+
+/* ---------- Lower panels ---------- */
+.mix{padding:4px 18px 18px;display:flex;flex-direction:column;gap:2px}
+.mix-row{display:grid;grid-template-columns:120px 1fr 52px;gap:14px;align-items:center;padding:8px 6px;border:0;border-radius:9px;background:transparent;cursor:pointer;text-align:left}
+.mix-row:hover{background:var(--bg2)}
+.mix-n{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mix-row .stack{height:12px;border-radius:5px}
+.mix-t{text-align:right;font-size:12px;color:var(--muted)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;color:var(--muted);font-size:12px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.src-panel{padding:4px 18px 18px}
+.donut-wrap{display:flex;align-items:center;gap:22px}
+.donut{position:relative;width:150px;height:150px;flex:none}
+.donut svg{width:150px;height:150px}
+.donut circle{transition:stroke-dasharray .9s cubic-bezier(.2,.8,.2,1)}
+.donut-c{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.donut-c b{font-size:24px;font-weight:600;letter-spacing:-.03em}
+.donut-c span{font-size:10px;color:var(--faint);text-transform:uppercase;letter-spacing:.1em}
+.src-list{display:flex;flex-direction:column;gap:10px;flex:1}
+.src-item{display:grid;grid-template-columns:10px 1fr auto;gap:10px;align-items:center}
+.src-item small{display:block;color:var(--faint);font-size:11px}
+.split{margin-top:20px;display:flex;flex-direction:column;gap:9px}
+.split-row{display:grid;grid-template-columns:78px 1fr 64px;gap:12px;align-items:center;font-size:12.5px}
+
+/* ---------- Pipeline strip ---------- */
+.pipe{margin-top:14px;padding:18px}
+.steps{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-top:14px}
+.step{position:relative;padding:14px;border-radius:12px;background:var(--bg2);border:1px solid var(--line)}
+.step:not(:last-child)::after{content:"→";position:absolute;right:-12px;top:50%;transform:translateY(-50%);color:var(--faint);font-size:13px;z-index:1}
+.step-n{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent);letter-spacing:.1em}
+.step b{display:block;margin-top:6px;font-weight:600}
+.step small{display:block;color:var(--faint);font-size:11.5px;margin-top:3px}
+footer{margin-top:28px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--faint);font-size:12px}
+footer a{color:var(--muted)}
+
+/* ---------- Command palette ---------- */
+dialog{margin:12vh auto auto;border:0;background:transparent;width:min(560px,calc(100vw - 28px));max-width:none;color:var(--text)}
+dialog::backdrop{background:rgba(3,6,10,.55);backdrop-filter:blur(4px)}
+.pal{overflow:hidden}
+.pal input{width:100%;border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--text);font:inherit;font-size:16px;padding:16px 18px;outline:none}
+.pal-list{max-height:340px;overflow:auto;padding:6px}
+.pal-item{display:flex;align-items:center;gap:12px;width:100%;padding:9px 10px;border:0;border-radius:10px;background:transparent;cursor:pointer;text-align:left}
+.pal-item.on{background:var(--accent-dim)}
+.pal-item .av{width:28px;height:28px;border-radius:8px;font-size:12px}
+.pal-item span.n{flex:1}
+.pal-foot{display:flex;gap:14px;padding:10px 16px;border-top:1px solid var(--line);color:var(--faint);font-size:11px}
+
+/* ---------- Loading & error ---------- */
+.skel{background:linear-gradient(90deg,var(--line) 0%,var(--line2) 50%,var(--line) 100%);background-size:200% 100%;animation:shim 1.3s infinite;border-radius:8px}
+@keyframes shim{to{background-position:-200% 0}}
+.err{padding:28px;margin-top:14px}
+.err h3{font-size:18px;letter-spacing:-.02em}
+.err p{color:var(--muted);margin-top:8px}
+.err code{font-family:'JetBrains Mono',monospace;font-size:12.5px;display:block;background:var(--bg2);border:1px solid var(--line);padding:10px 12px;border-radius:9px;margin-top:10px;color:var(--text)}
+
+/* ---------- Responsive ---------- */
+@media (max-width:1100px){
+  .main,.lower{grid-template-columns:1fr}
+  .detail{position:static;max-height:none}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .steps{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .step::after{display:none}
+}
+@media (max-width:680px){
+  .wrap{padding:0 14px 40px}
+  .top-in{padding:10px 14px;gap:10px}
+  .status,.kbtn .t,.kbtn kbd{display:none}
+  .kbtn{min-width:0;padding:0;width:38px;height:38px;justify-content:center}
+  .hero{padding-top:28px}
+  .hero-meta{align-items:flex-start}
+  .kpis{gap:10px}
+  .kpi-value{font-size:26px}
+  .kpi-spark{display:none}
+  .thead,.row{grid-template-columns:22px 30px minmax(0,1fr) 96px 50px;gap:10px;padding:0 14px}
+  .h-open,.h-eng,.h-spark,.c-open,.c-eng,.c-spark{display:none}
+  .av{width:30px;height:30px}
+  .d-stats{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .dbar{grid-template-columns:10px 96px 1fr 38px}
+  .dp{display:none}
+  .mix-row{grid-template-columns:86px 1fr 44px}
+  .donut-wrap{flex-direction:column;align-items:stretch}
+  .donut{margin:0 auto}
+  .steps{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" style="stop-color:var(--accent2)"/>
+      <stop offset="1" style="stop-color:var(--accent)"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<header class="top">
+  <div class="top-in">
+    <a class="logo" href="#" aria-label="SignalStack home">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+        <rect x="0.5" y="0.5" width="27" height="27" rx="8" style="fill:var(--accent-dim);stroke:var(--accent)" stroke-opacity=".5"/>
+        <path d="M6 18.5l4-5 3.5 3 4.5-7 4 4.5" style="stroke:var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="22" cy="14" r="1.8" style="fill:var(--accent)"/>
+      </svg>
+      SignalStack
+    </a>
+    <span class="status" id="status"><span class="live"></span><span id="status-text">Loading pipeline…</span></span>
+    <span class="sp"></span>
+    <button class="kbtn" id="open-pal" aria-label="Search companies">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <span class="t">Jump to a company…</span><kbd>Ctrl K</kbd>
+    </button>
+    <button class="icon-btn" id="theme" aria-label="Toggle light and dark theme">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+    </button>
+  </div>
+</header>
+
+<div class="wrap">
+  <section class="hero">
+    <div>
+      <div class="eyebrow">Startup hiring intelligence</div>
+      <h1>Which companies are <em>growing right now?</em></h1>
+      <p>Every morning, an automated pipeline collects open roles from Greenhouse, Lever and Ashby, cleans and scores them, and ranks companies by hiring momentum.</p>
+    </div>
+    <div class="hero-meta" id="hero-meta"></div>
+  </section>
+
+  <section class="kpis" id="kpis">
+    <div class="kpi panel"><div class="skel" style="height:12px;width:50%"></div><div class="skel" style="height:34px;width:70%;margin-top:14px"></div></div>
+    <div class="kpi panel"><div class="skel" style="height:12px;width:50%"></div><div class="skel" style="height:34px;width:70%;margin-top:14px"></div></div>
+    <div class="kpi panel"><div class="skel" style="height:12px;width:50%"></div><div class="skel" style="height:34px;width:70%;margin-top:14px"></div></div>
+    <div class="kpi panel"><div class="skel" style="height:12px;width:50%"></div><div class="skel" style="height:34px;width:70%;margin-top:14px"></div></div>
+  </section>
+
+  <div id="app">
+    <section class="main">
+      <div class="panel board">
+        <div class="p-head">
+          <div>
+            <div class="p-title">Hiring momentum leaderboard</div>
+            <div class="p-sub">Hot score = 40% total openings · 40% engineering · 20% sales, relative to the leader</div>
+          </div>
+        </div>
+        <div class="controls">
+          <label class="search">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+            <input class="input" id="board-q" placeholder="Filter companies…" autocomplete="off" aria-label="Filter companies">
+          </label>
+          <div class="chips" id="src-chips"></div>
+          <select class="input" id="sort" aria-label="Sort by">
+            <option value="hot_score">Sort: Hot score</option>
+            <option value="open_jobs">Sort: Open roles</option>
+            <option value="engineering_jobs">Sort: Engineering</option>
+            <option value="sales_jobs">Sort: Sales</option>
+            <option value="india_jobs">Sort: India roles</option>
+            <option value="delta">Sort: Daily change</option>
+          </select>
+        </div>
+        <div class="thead">
+          <span>#</span><span></span><span>Company</span><span>Hot score</span>
+          <span class="r h-open">Open</span><span class="r h-eng">Eng</span><span class="r h-spark">Trend</span><span class="r">Δ day</span>
+        </div>
+        <div class="rows" id="rows" role="listbox" aria-label="Companies">
+          <div style="padding:18px;display:flex;flex-direction:column;gap:14px">
+            <div class="skel" style="height:34px"></div><div class="skel" style="height:34px"></div><div class="skel" style="height:34px"></div><div class="skel" style="height:34px"></div>
+          </div>
+        </div>
+        <div class="board-foot"><span id="board-count"></span><span>Click a company for details</span></div>
+      </div>
+
+      <aside class="panel detail" id="detail" aria-live="polite"></aside>
+    </section>
+
+    <section class="lower">
+      <div class="panel">
+        <div class="p-head">
+          <div>
+            <div class="p-title">Who's hiring for what</div>
+            <div class="p-sub">Department mix of open roles, top 12 companies by hot score</div>
+          </div>
+          <div class="legend" id="legend"></div>
+        </div>
+        <div class="mix" id="mix"></div>
+      </div>
+      <div class="panel">
+        <div class="p-head">
+          <div>
+            <div class="p-title">Coverage</div>
+            <div class="p-sub">Open roles by hiring platform and location</div>
+          </div>
+        </div>
+        <div class="src-panel" id="sources"></div>
+      </div>
+    </section>
+
+    <section class="panel pipe">
+      <div class="p-title">How this data is made</div>
+      <div class="p-sub">A daily ELT pipeline, scheduled with GitHub Actions</div>
+      <div class="steps">
+        <div class="step"><div class="step-n">01 · EXTRACT</div><b>3 hiring APIs</b><small>Greenhouse, Lever, Ashby · daily 06:00 IST</small></div>
+        <div class="step"><div class="step-n">02 · LOAD</div><b>Raw → DuckDB</b><small>Date-partitioned JSON, normalized to one schema, deduplicated</small></div>
+        <div class="step"><div class="step-n">03 · TRANSFORM</div><b>SQL models</b><small>raw_jobs → jobs_clean → company_signals → company_scores</small></div>
+        <div class="step"><div class="step-n">04 · EXPORT</div><b>data.json</b><small>Latest scores, roles and daily history</small></div>
+        <div class="step"><div class="step-n">05 · SERVE</div><b>This dashboard</b><small id="serve-note">Static site, rebuilt on every run</small></div>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <span>SignalStack · built by Jyotishka Ghosh</span>
+    <span><a href="https://github.com/JyotishkaGhosh/signalstack" target="_blank" rel="noopener">Source on GitHub ↗</a></span>
+  </footer>
+</div>
+
+<dialog id="pal" aria-label="Jump to a company">
+  <div class="panel pal">
+    <input id="pal-q" placeholder="Jump to a company…" autocomplete="off" aria-label="Search companies">
+    <div class="pal-list" id="pal-list" role="listbox"></div>
+    <div class="pal-foot"><span><kbd>↑</kbd> <kbd>↓</kbd> navigate</span><span><kbd>↵</kbd> open</span><span><kbd>esc</kbd> close</span></div>
+  </div>
+</dialog>
+
+<script>
+(() => {
+  "use strict";
+
+  // ---------- Helpers ----------
+  const DEPTS = ["Engineering", "Sales", "Marketing", "Product & Design", "Other"];
+  const DCOL = { "Engineering": "var(--eng)", "Sales": "var(--sales)", "Marketing": "var(--mkt)", "Product & Design": "var(--prod)", "Other": "var(--other)" };
+  const $ = (s, el = document) => el.querySelector(s);
+  const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+  const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const fmt = n => Number(n || 0).toLocaleString("en-IN");
+  const pct = (a, b) => b ? Math.round((a / b) * 100) + "%" : "0%";
+  const nice = slug => String(slug).split(/[-_]/).map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+  const safeUrl = u => /^https?:\/\//i.test(u || "") ? u : "#";
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const emptyDepts = () => Object.fromEntries(DEPTS.map(k => [k, 0]));
+
+  const state = {
+    companies: [], jobs: [], totalSeries: [], meta: {},
+    filter: { q: "", source: "all", sort: "hot_score" },
+    selected: null,
+    jobFilter: { q: "", dept: "all" },
+    jobLimit: 50,
+    pal: { items: [], index: 0 },
+  };
+
+  // ---------- Theme ----------
+  function setTheme(t) {
+    document.documentElement.dataset.theme = t;
+    try { localStorage.setItem("ss-theme", t); } catch (e) {}
+  }
+  try {
+    const saved = localStorage.getItem("ss-theme");
+    if (saved) setTheme(saved);
+    else if (matchMedia("(prefers-color-scheme: light)").matches) setTheme("light");
+  } catch (e) {}
+  $("#theme").addEventListener("click", () => setTheme(document.documentElement.dataset.theme === "dark" ? "light" : "dark"));
+
+  // ---------- Small visual building blocks ----------
+  function avatar(name, size = "") {
+    let h = 0;
+    for (const ch of String(name)) h = (h * 31 + ch.charCodeAt(0)) % 360;
+    return `<span class="av ${size}" style="--h:${h}" aria-hidden="true">${esc(nice(name).charAt(0))}</span>`;
+  }
+
+  function spark(vals, w, h, color) {
+    if (!vals || vals.length < 2) {
+      return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true"><line x1="2" y1="${h / 2}" x2="${w - 8}" y2="${h / 2}" style="stroke:var(--line2)" stroke-dasharray="2 3"/><circle cx="${w - 4}" cy="${h / 2}" r="2.5" style="fill:${color}"/></svg>`;
+    }
+    const mn = Math.min(...vals), mx = Math.max(...vals), r = mx - mn || 1;
+    const pts = vals.map((v, i) => [2 + (i / (vals.length - 1)) * (w - 6), h - 3 - ((v - mn) / r) * (h - 6)]);
+    const d = pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ");
+    const last = pts[pts.length - 1];
+    return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true"><path d="${d}" fill="none" style="stroke:${color}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="${last[0].toFixed(1)}" cy="${last[1].toFixed(1)}" r="2.6" style="fill:${color}"/></svg>`;
+  }
+
+  function deltaChip(d) {
+    if (d == null) return `<span class="delta is-new" title="Daily change appears after 2+ snapshots">new</span>`;
+    if (d === 0) return `<span class="delta">±0</span>`;
+    return `<span class="delta ${d > 0 ? "up" : "down"}">${d > 0 ? "▲" : "▼"}${fmt(Math.abs(d))}</span>`;
+  }
+
+  function countUp(el) {
+    const end = Number(el.dataset.count) || 0;
+    if (reduceMotion) { el.textContent = fmt(end); return; }
+    const t0 = performance.now(), dur = 1000;
+    const step = t => {
+      const p = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - p, 3);
+      el.textContent = fmt(Math.round(end * e));
+      if (p < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+
+  function prettyDate(iso) {
+    if (!iso) return "—";
+    const d = new Date(iso.length <= 10 ? iso + "T00:00:00" : iso);
+    return isNaN(d) ? iso : d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+  }
+
+  function ago(iso) {
+    const t = Date.parse(iso);
+    if (isNaN(t)) return "";
+    const s = Math.max(0, (Date.now() - t) / 1000);
+    if (s < 90) return "just now";
+    if (s < 3600) return Math.round(s / 60) + " min ago";
+    if (s < 86400) return Math.round(s / 3600) + " h ago";
+    return Math.round(s / 86400) + " days ago";
+  }
+
+  // ---------- Data ----------
+  async function init() {
+    try {
+      const res = await fetch("data.json", { cache: "no-store" });
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      hydrate(await res.json());
+    } catch (err) {
+      showError(err);
+    }
+  }
+
+  function hydrate(d) {
+    state.meta = { data_date: d.data_date, generated_at: d.generated_at };
+    state.jobs = (d.jobs || []).map(j => ({ ...j, department: DEPTS.includes(j.department) ? j.department : "Other" }));
+
+    const depts = {};
+    for (const j of state.jobs) {
+      const o = depts[j.company] || (depts[j.company] = emptyDepts());
+      o[j.department]++;
+    }
+
+    const hist = {}, totals = {};
+    for (const h of d.history || []) {
+      (hist[h.company] || (hist[h.company] = [])).push({ date: h.date, v: h.open_jobs });
+      totals[h.date] = (totals[h.date] || 0) + h.open_jobs;
+    }
+    Object.values(hist).forEach(a => a.sort((x, y) => x.date.localeCompare(y.date)));
+    state.totalSeries = Object.keys(totals).sort().map(k => ({ date: k, v: totals[k] }));
+
+    state.companies = (d.companies || [])
+      .slice()
+      .sort((a, b) => (b.hot_score || 0) - (a.hot_score || 0))
+      .map((c, i) => {
+        const s = hist[c.company] || [];
+        return {
+          ...c,
+          rank: i + 1,
+          depts: depts[c.company] || emptyDepts(),
+          series: s,
+          delta: s.length > 1 ? s[s.length - 1].v - s[s.length - 2].v : null,
+        };
+      });
+
+    state.selected = state.companies[0] ? state.companies[0].company : null;
+    renderAll();
+  }
+
+  function showError(err) {
+    $("#status-text").textContent = "Data unavailable";
+    $("#kpis").innerHTML = "";
+    $("#app").innerHTML = `
+      <div class="panel err">
+        <h3>Couldn't load the pipeline data</h3>
+        <p>The dashboard reads <b>data.json</b> from the same folder. Generate it, then serve the folder (opening index.html directly by double-clicking won't work):</p>
+        <code>python load.py &amp;&amp; python transform.py &amp;&amp; python export.py</code>
+        <code>python -m http.server 8000 --directory site</code>
+        <p>Then open <b>http://localhost:8000</b>. <span class="muted">(${esc(err.message)})</span></p>
+      </div>`;
+  }
+
+  // ---------- Rendering ----------
+  function renderAll() {
+    $("#status-text").textContent = "Pipeline live · data as of " + prettyDate(state.meta.data_date);
+    $("#hero-meta").innerHTML = `
+      <span>Last refresh <b>${esc(ago(state.meta.generated_at) || prettyDate(state.meta.data_date))}</b></span>
+      <span><b>${fmt(state.totalSeries.length)}</b> daily snapshot${state.totalSeries.length === 1 ? "" : "s"} collected</span>`;
+    $("#serve-note").textContent = "Static site · refreshed " + (ago(state.meta.generated_at) || "daily");
+    renderKPIs();
+    renderChips();
+    renderBoard();
+    renderDetail();
+    renderMix();
+    renderSources();
+  }
+
+  function renderKPIs() {
+    const C = state.companies;
+    const sum = k => C.reduce((a, c) => a + (Number(c[k]) || 0), 0);
+    const open = sum("open_jobs"), eng = sum("engineering_jobs");
+    const t = state.totalSeries;
+    const td = t.length > 1 ? t[t.length - 1].v - t[t.length - 2].v : null;
+    const items = [
+      { label: "Companies tracked", value: C.length, sub: `${new Set(C.map(c => c.source)).size} hiring platforms` },
+      { label: "Open roles", value: open,
+        sub: td == null ? "First snapshot · trend starts tomorrow" : `<span class="${td >= 0 ? "up" : "down"}">${td >= 0 ? "▲" : "▼"} ${fmt(Math.abs(td))}</span> vs previous day`,
+        trend: t },
+      { label: "Engineering roles", value: eng, sub: `${pct(eng, open)} of all openings` },
+      { label: "Roles in India", value: sum("india_jobs"), sub: `${fmt(sum("remote_jobs"))} remote roles worldwide` },
+    ];
+    $("#kpis").innerHTML = items.map((k, i) => `
+      <div class="kpi panel" style="--d:${i * 70}ms">
+        <div class="kpi-label">${k.label}</div>
+        <div class="kpi-value mono" data-count="${k.value}">0</div>
+        <div class="kpi-sub">${k.sub}</div>
+        ${k.trend && k.trend.length > 1 ? `<div class="kpi-spark">${spark(k.trend.map(p => p.v), 110, 30, "var(--accent)")}</div>` : ""}
+      </div>`).join("");
+    $$("#kpis [data-count]").forEach(countUp);
+  }
+
+  function renderChips() {
+    const sources = ["all", ...new Set(state.companies.map(c => c.source))];
+    $("#src-chips").innerHTML = sources.map(s =>
+      `<button class="chip${state.filter.source === s ? " on" : ""}" data-src="${esc(s)}">${esc(s)}</button>`).join("");
+  }
+
+  function filteredCompanies() {
+    const { q, source, sort } = state.filter;
+    const qq = q.trim().toLowerCase();
+    return state.companies
+      .filter(c => (source === "all" || c.source === source) && (!qq || c.company.toLowerCase().includes(qq) || nice(c.company).toLowerCase().includes(qq)))
+      .sort((a, b) => (b[sort] ?? -1e9) - (a[sort] ?? -1e9));
+  }
+
+  function renderBoard() {
+    const list = filteredCompanies();
+    const max = Math.max(1, ...state.companies.map(c => c.hot_score || 0));
+    $("#board-count").textContent = `Showing ${list.length} of ${state.companies.length} companies`;
+    if (!list.length) {
+      $("#rows").innerHTML = `<div class="empty">No companies match “${esc(state.filter.q)}”.</div>`;
+      return;
+    }
+    $("#rows").innerHTML = list.map((c, i) => {
+      const sel = c.company === state.selected;
+      return `
+      <button class="row${sel ? " is-sel" : ""}" data-c="${esc(c.company)}" role="option" aria-selected="${sel}" style="--d:${Math.min(i, 14) * 25}ms">
+        <span class="rank mono">${String(c.rank).padStart(2, "0")}</span>
+        ${avatar(c.company)}
+        <span class="nm"><b>${esc(nice(c.company))}</b><span class="src src-${esc(c.source)}">${esc(c.source)}</span></span>
+        <span class="sc"><span class="bar"><i style="width:${((c.hot_score || 0) / max * 100).toFixed(1)}%"></i></span><b class="mono">${Number(c.hot_score || 0).toFixed(1)}</b></span>
+        <span class="num mono c-open">${fmt(c.open_jobs)}</span>
+        <span class="num mono c-eng">${fmt(c.engineering_jobs)}</span>
+        <span class="c-spark">${spark(c.series.map(p => p.v), 76, 24, "var(--accent2)")}</span>
+        ${deltaChip(c.delta)}
+      </button>`;
+    }).join("");
+  }
+
+  function stat(label, v) {
+    return `<div class="stat"><span>${label}</span><b class="mono">${fmt(v)}</b></div>`;
+  }
+
+  function trendChart(s) {
+    if (!s || s.length < 2) {
+      return `<div class="note"><span class="pulse"></span><span>The trend line unlocks once the pipeline has 2+ daily snapshots. The scheduled run adds one every morning at 06:00 IST.</span></div>`;
+    }
+    const w = 380, h = 120, p = 8;
+    const vals = s.map(x => x.v), mn = Math.min(...vals), mx = Math.max(...vals), r = mx - mn || 1;
+    const pts = s.map((x, i) => [p + (i / (s.length - 1)) * (w - 2 * p), 12 + (1 - (x.v - mn) / r) * (h - 40)]);
+    const line = pts.map((q, i) => (i ? "L" : "M") + q[0].toFixed(1) + " " + q[1].toFixed(1)).join(" ");
+    const base = h - 22;
+    const area = `${line} L${pts[pts.length - 1][0].toFixed(1)} ${base} L${pts[0][0].toFixed(1)} ${base} Z`;
+    const last = pts[pts.length - 1];
+    return `<svg class="trend" viewBox="0 0 ${w} ${h}" role="img" aria-label="Open roles over time">
+      <defs><linearGradient id="tg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" style="stop-color:var(--accent);stop-opacity:.35"/><stop offset="1" style="stop-color:var(--accent);stop-opacity:0"/></linearGradient></defs>
+      <line x1="${p}" x2="${w - p}" y1="${base}" y2="${base}" style="stroke:var(--line)"/>
+      <path d="${area}" style="fill:url(#tg)"/>
+      <path d="${line}" fill="none" style="stroke:var(--accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="${last[0].toFixed(1)}" cy="${last[1].toFixed(1)}" r="4" style="fill:var(--accent)"/>
+      <text x="${p}" y="${h - 6}" class="ax">${esc(s[0].date)}</text>
+      <text x="${w - p}" y="${h - 6}" class="ax" text-anchor="end">${esc(s[s.length - 1].date)} · ${fmt(last ? s[s.length - 1].v : 0)} roles</text>
+    </svg>`;
+  }
+
+  function renderDetail() {
+    const el = $("#detail");
+    const c = state.companies.find(x => x.company === state.selected);
+    if (!c) { el.innerHTML = `<div class="empty">Select a company to see details.</div>`; return; }
+    const total = c.open_jobs || 0;
+    const R = 40, CIRC = 2 * Math.PI * R, frac = Math.max(0, Math.min(1, (c.hot_score || 0) / 100));
+    const rows = DEPTS.map(k => ({ k, v: c.depts[k] || 0 })).filter(x => x.v > 0).sort((a, b) => b.v - a.v);
+    const dmax = Math.max(1, ...rows.map(x => x.v));
+    const df = state.jobFilter.dept;
+    el.innerHTML = `
+      <div class="d-in">
+        <div class="d-head">
+          ${avatar(c.company, "lg")}
+          <div>
+            <h2>${esc(nice(c.company))}</h2>
+            <div class="d-meta"><span class="src src-${esc(c.source)}">${esc(c.source)}</span><span>Rank #${c.rank} of ${state.companies.length}</span></div>
+          </div>
+          <div class="ring" title="Hot score ${Number(c.hot_score || 0).toFixed(1)} / 100">
+            <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="${R}" class="ring-bg"/><circle cx="50" cy="50" r="${R}" class="ring-fg" stroke-dasharray="${CIRC.toFixed(2)}" stroke-dashoffset="${CIRC.toFixed(2)}" data-off="${(CIRC * (1 - frac)).toFixed(2)}" transform="rotate(-90 50 50)"/></svg>
+            <div class="ring-val"><b class="mono">${Math.round(c.hot_score || 0)}</b><span>hot score</span></div>
+          </div>
+        </div>
+
+        <div class="d-stats">
+          ${stat("Open", c.open_jobs)}${stat("Eng", c.engineering_jobs)}${stat("Sales", c.sales_jobs)}${stat("India", c.india_jobs)}${stat("Remote", c.remote_jobs)}
+        </div>
+
+        <div class="d-sec">
+          <div class="d-title"><span>Hiring mix</span><span class="muted" style="text-transform:none;letter-spacing:0">Click to filter roles</span></div>
+          <div class="stack">${rows.map(x => `<i style="flex:${x.v};background:${DCOL[x.k]}" title="${esc(x.k)}: ${x.v}"></i>`).join("")}</div>
+          <div class="dbars">${rows.map(x => `
+            <button class="dbar${df === x.k ? " on" : ""}" data-dept="${esc(x.k)}">
+              <span class="dot" style="background:${DCOL[x.k]}"></span>
+              <span class="dk">${esc(x.k)}</span>
+              <span class="dtrack"><i style="width:${(x.v / dmax * 100).toFixed(1)}%;background:${DCOL[x.k]}"></i></span>
+              <span class="mono dv">${fmt(x.v)}</span>
+              <span class="mono dp">${pct(x.v, total)}</span>
+            </button>`).join("")}</div>
+        </div>
+
+        <div class="d-sec">
+          <div class="d-title"><span>Open roles over time</span></div>
+          ${trendChart(c.series)}
+        </div>
+
+        <div class="d-sec">
+          <div class="d-title">
+            <span>Open roles <span class="muted" id="jobs-count"></span></span>
+            ${df !== "all" ? `<button class="link-btn" data-dept="all">${esc(df)} only · clear ✕</button>` : ""}
+          </div>
+          <label class="search">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+            <input class="input" id="job-q" placeholder="Search roles or locations…" value="${esc(state.jobFilter.q)}" autocomplete="off" aria-label="Search roles">
+          </label>
+          <div class="jobs" id="jobs"></div>
+        </div>
+      </div>`;
+    requestAnimationFrame(() => {
+      const fg = $(".ring-fg", el);
+      if (fg) fg.style.strokeDashoffset = fg.dataset.off;
+    });
+    renderJobs();
+  }
+
+  function renderJobs() {
+    const box = $("#jobs");
+    if (!box) return;
+    const { q, dept } = state.jobFilter;
+    const qq = q.trim().toLowerCase();
+    const list = state.jobs.filter(j =>
+      j.company === state.selected &&
+      (dept === "all" || j.department === dept) &&
+      (!qq || String(j.title || "").toLowerCase().includes(qq) || String(j.location || "").toLowerCase().includes(qq)));
+    const shown = list.slice(0, state.jobLimit);
+    $("#jobs-count").textContent = "· " + fmt(list.length);
+    if (!list.length) { box.innerHTML = `<div class="empty">No roles match.</div>`; return; }
+    box.innerHTML = shown.map(j => `
+      <a class="job" href="${esc(safeUrl(j.url))}" target="_blank" rel="noopener">
+        <span class="dot" style="background:${DCOL[j.department]}" title="${esc(j.department)}"></span>
+        <span class="jt"><b>${esc(j.title)}</b><small>${esc(j.location || "Location not listed")}${j.is_remote ? " · <em>Remote</em>" : ""}${j.is_india ? " · <em>India</em>" : ""}</small></span>
+        <span class="arr">↗</span>
+      </a>`).join("") +
+      (list.length > shown.length ? `<button class="more" id="more">Show ${Math.min(50, list.length - shown.length)} more of ${fmt(list.length - shown.length)}</button>` : "");
+  }
+
+  function renderMix() {
+    $("#legend").innerHTML = DEPTS.map(k => `<span><i class="dot" style="background:${DCOL[k]}"></i>${esc(k)}</span>`).join("");
+    const top = state.companies.slice(0, 12);
+    $("#mix").innerHTML = top.map(c => {
+      const t = DEPTS.reduce((a, k) => a + (c.depts[k] || 0), 0);
+      return `
+        <button class="mix-row" data-c="${esc(c.company)}">
+          <span class="mix-n">${esc(nice(c.company))}</span>
+          <span class="stack">${DEPTS.map(k => c.depts[k] ? `<i style="flex:${c.depts[k]};background:${DCOL[k]}" title="${esc(k)}: ${c.depts[k]} (${pct(c.depts[k], t)})"></i>` : "").join("")}</span>
+          <span class="mono mix-t">${fmt(t)}</span>
+        </button>`;
+    }).join("") || `<div class="empty">No data yet.</div>`;
+  }
+
+  function renderSources() {
+    const agg = {};
+    for (const c of state.companies) {
+      const a = agg[c.source] || (agg[c.source] = { companies: 0, jobs: 0 });
+      a.companies++;
+      a.jobs += c.open_jobs || 0;
+    }
+    const entries = Object.entries(agg).sort((a, b) => b[1].jobs - a[1].jobs);
+    const total = entries.reduce((s, [, v]) => s + v.jobs, 0) || 1;
+    const R = 56, CIRC = 2 * Math.PI * R, gap = entries.length > 1 ? 3 : 0;
+    let off = 0;
+    const segs = entries.map(([k, v]) => {
+      const len = Math.max(0, (v.jobs / total) * CIRC - gap);
+      const seg = `<circle cx="75" cy="75" r="${R}" fill="none" style="stroke:var(--src-${esc(k)}, var(--other))" stroke-width="16" stroke-dasharray="${len.toFixed(2)} ${(CIRC - len).toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}" transform="rotate(-90 75 75)"><title>${esc(k)}: ${fmt(v.jobs)} roles</title></circle>`;
+      off += (v.jobs / total) * CIRC;
+      return seg;
+    }).join("");
+
+    const jobsTotal = state.jobs.length || 1;
+    const india = state.jobs.filter(j => j.is_india).length;
+    const remote = state.jobs.filter(j => j.is_remote).length;
+    const other = Math.max(0, state.jobs.length - india - remote);
+    const split = [["India", india, "var(--accent)"], ["Remote", remote, "var(--accent2)"], ["Elsewhere", other, "var(--other)"]];
+
+    $("#sources").innerHTML = `
+      <div class="donut-wrap">
+        <div class="donut">
+          <svg viewBox="0 0 150 150"><circle cx="75" cy="75" r="${R}" fill="none" style="stroke:var(--line)" stroke-width="16"/>${segs}</svg>
+          <div class="donut-c"><b class="mono">${fmt(total)}</b><span>open roles</span></div>
+        </div>
+        <div class="src-list">${entries.map(([k, v]) => `
+          <div class="src-item">
+            <span class="dot" style="background:var(--src-${esc(k)}, var(--other))"></span>
+            <span><b style="text-transform:capitalize;font-weight:600">${esc(k)}</b><small>${v.companies} compan${v.companies === 1 ? "y" : "ies"}</small></span>
+            <span class="mono">${pct(v.jobs, total)}</span>
+          </div>`).join("")}</div>
+      </div>
+      <div class="split">
+        <div class="d-title" style="margin-bottom:2px"><span>Where the roles are</span></div>
+        ${split.map(([k, v, col]) => `
+          <div class="split-row">
+            <span>${k}</span>
+            <span class="dtrack"><i style="width:${(v / jobsTotal * 100).toFixed(1)}%;background:${col}"></i></span>
+            <span class="mono r">${fmt(v)}</span>
+          </div>`).join("")}
+      </div>`;
+  }
+
+  // ---------- Interactions ----------
+  function select(company, scroll) {
+    if (!company) return;
+    state.selected = company;
+    state.jobFilter = { q: "", dept: "all" };
+    state.jobLimit = 50;
+    renderBoard();
+    renderDetail();
+    if (scroll && window.innerWidth <= 1100) $("#detail").scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+  }
+
+  document.addEventListener("click", e => {
+    const row = e.target.closest("[data-c]");
+    if (row && !row.closest("#pal")) { select(row.dataset.c, true); return; }
+    const d = e.target.closest("[data-dept]");
+    if (d) {
+      state.jobFilter.dept = state.jobFilter.dept === d.dataset.dept ? "all" : d.dataset.dept;
+      state.jobLimit = 50;
+      renderDetail();
+      return;
+    }
+    const chip = e.target.closest("[data-src]");
+    if (chip) { state.filter.source = chip.dataset.src; renderChips(); renderBoard(); return; }
+    if (e.target.closest("#more")) { state.jobLimit += 50; renderJobs(); }
+  });
+
+  $("#board-q").addEventListener("input", e => { state.filter.q = e.target.value; renderBoard(); });
+  $("#sort").addEventListener("change", e => { state.filter.sort = e.target.value; renderBoard(); });
+  document.addEventListener("input", e => {
+    if (e.target.id === "job-q") { state.jobFilter.q = e.target.value; state.jobLimit = 50; renderJobs(); }
+  });
+
+  // ---------- Command palette ----------
+  const pal = $("#pal"), palQ = $("#pal-q");
+  function openPal() {
+    if (!state.companies.length) return;
+    palQ.value = "";
+    renderPal();
+    if (!pal.open) pal.showModal();
+    palQ.focus();
+  }
+  function renderPal() {
+    const q = palQ.value.trim().toLowerCase();
+    state.pal.items = state.companies.filter(c => !q || c.company.toLowerCase().includes(q) || nice(c.company).toLowerCase().includes(q)).slice(0, 8);
+    state.pal.index = 0;
+    drawPal();
+  }
+  function drawPal() {
+    const items = state.pal.items;
+    $("#pal-list").innerHTML = items.length ? items.map((c, i) => `
+      <button class="pal-item${i === state.pal.index ? " on" : ""}" data-pal="${esc(c.company)}" role="option" aria-selected="${i === state.pal.index}">
+        ${avatar(c.company)}<span class="n">${esc(nice(c.company))}</span>
+        <span class="src src-${esc(c.source)}">${esc(c.source)}</span>
+        <span class="mono muted" style="font-size:12px;min-width:44px;text-align:right">${Number(c.hot_score || 0).toFixed(1)}</span>
+      </button>`).join("") : `<div class="empty">No matches</div>`;
+  }
+  function choosePal(company) { pal.close(); select(company, true); }
+  $("#open-pal").addEventListener("click", openPal);
+  palQ.addEventListener("input", renderPal);
+  palQ.addEventListener("keydown", e => {
+    const n = state.pal.items.length;
+    if (e.key === "ArrowDown" && n) { e.preventDefault(); state.pal.index = (state.pal.index + 1) % n; drawPal(); }
+    else if (e.key === "ArrowUp" && n) { e.preventDefault(); state.pal.index = (state.pal.index - 1 + n) % n; drawPal(); }
+    else if (e.key === "Enter" && n) { e.preventDefault(); choosePal(state.pal.items[state.pal.index].company); }
+  });
+  $("#pal-list").addEventListener("click", e => { const b = e.target.closest("[data-pal]"); if (b) choosePal(b.dataset.pal); });
+  pal.addEventListener("click", e => { if (e.target === pal) pal.close(); });
+  document.addEventListener("keydown", e => {
+    const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement && document.activeElement.tagName);
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") { e.preventDefault(); openPal(); }
+    else if (e.key === "/" && !typing) { e.preventDefault(); openPal(); }
+  });
+
+  init();
+})();
+</script>
+</body>
+</html>
