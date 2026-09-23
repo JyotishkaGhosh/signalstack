@@ -1,0 +1,4 @@
+.venv/
+signalstack.duckdb
+__pycache__/
+.env
