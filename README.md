@@ -123,4 +123,4 @@ All job listings remain the property of the employers and sources that publish t
 
 ---
 
-Built by Jyotishka Ghosh.
+Built by Jyotishka Ghosh and special thanks to Ritankar Mondal.
