@@ -2,6 +2,7 @@
 import datetime
 import json
 import os
+import re
 
 import duckdb
 
@@ -47,6 +48,11 @@ jobs = [list(r) for r in result]
 
 counts = dict(con.sql("SELECT source, COUNT(*) FROM jobs_listed WHERE url ILIKE 'http%' GROUP BY 1").fetchall())
 data_date = con.sql("SELECT CAST(MAX(snapshot_date) AS VARCHAR) FROM jobs_clean").fetchone()[0]
+history_start, history_end, history_days = con.sql("""
+    SELECT CAST(MIN(first_seen) AS VARCHAR), CAST(MAX(last_seen) AS VARCHAR),
+           date_diff('day', MIN(first_seen), MAX(last_seen)) + 1
+    FROM job_history
+""").fetchone()
 con.close()
 
 output = {
@@ -60,6 +66,25 @@ output = {
 os.makedirs("site", exist_ok=True)
 with open("site/data.json", "w", encoding="utf-8") as f:
     json.dump(output, f, ensure_ascii=False, separators=(",", ":"))
+
+# ---- Refresh the stats line in README.md (between the stats markers) ----
+active = sum(1 for v in counts.values() if v)
+companies = len({j[FIELDS.index("company")] for j in jobs})
+sources_note = f" ({active} returned jobs in that run)" if active < len(SOURCES) else ""
+stats = (f"As of the {data_date} run: {len(jobs):,} open jobs from {companies:,} companies, "
+         f"collected from {len(SOURCES)} configured sources{sources_note}, "
+         f"with {history_days} day{'s' if history_days != 1 else ''} of history ({history_start} to {history_end}).")
+if os.path.exists("README.md"):
+    with open("README.md", encoding="utf-8") as f:
+        readme = f.read()
+    updated = re.sub(r"(<!-- stats:start -->\n).*?(\n<!-- stats:end -->)",
+                     lambda m: m.group(1) + stats + m.group(2), readme, flags=re.S)
+    if updated == readme and stats not in readme:
+        print("README.md has no stats markers, stats line not updated")
+    elif updated != readme:
+        with open("README.md", "w", encoding="utf-8", newline="\n") as f:
+            f.write(updated)
+        print("Updated README.md stats line")
 
 size = os.path.getsize("site/data.json") / 1e6
 print(f"Exported {len(jobs)} jobs from {sum(1 for v in counts.values() if v)} sources "

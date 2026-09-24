@@ -40,7 +40,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/job_history.parquet site/data.json
+          git add data/job_history.parquet site/data.json README.md
           git diff --cached --quiet || git commit -m "Daily data: $(date +%F)"
           git pull --rebase origin main
           git push
