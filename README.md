@@ -123,4 +123,4 @@ All job listings remain the property of the employers and sources that publish t
 
 ---
 
-Built by Jyotishka Ghosh with the help of Claude Code.
+Built by Jyotishka Ghosh.
