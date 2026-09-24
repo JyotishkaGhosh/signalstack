@@ -72,6 +72,37 @@ kbd{font:12px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;padding:3px
 .menu button:hover,.menu button:focus-visible{background:var(--surface-2);outline:none}
 .menu hr{border:0;border-top:1px solid var(--border);margin:6px 2px}
 .menu small{display:block;color:var(--text-3);font-size:12px;padding:4px 10px 2px}
+.menu .menu-email{color:var(--text);font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:240px}
+.acct-btn{gap:8px;padding:0 8px 0 4px}
+.avatar{width:26px;height:26px;border-radius:50%;background:var(--accent-soft);color:var(--accent-text);display:grid;place-items:center;font-weight:600;font-size:12.5px;flex:none}
+.acct-email{max-width:180px;overflow:hidden;text-overflow:ellipsis}
+
+/* ---------- Welcome ---------- */
+.w-top{max-width:1280px;margin:0 auto;height:60px;padding:0 24px;display:flex;align-items:center;justify-content:space-between}
+.welcome-main{max-width:460px;margin:0 auto;padding:56px 24px 40px}
+.welcome-main h1{font-size:26px;line-height:1.25;letter-spacing:-.015em;font-weight:650;margin:0 0 12px}
+.lede{color:var(--text-2);font-size:15px;margin:0 0 10px}
+.w-stats{color:var(--text-3);font-size:13px;margin:0 0 28px;min-height:20px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:22px;box-shadow:var(--shadow)}
+.card h2{font-size:15px;font-weight:600;margin:0 0 4px}
+.muted{color:var(--text-2);font-size:13.5px;margin:0 0 16px}
+.field-label{display:block;font-size:13px;font-weight:500;margin-bottom:6px}
+.input{width:100%;height:40px;padding:0 12px;border:1px solid var(--border-strong);border-radius:8px;background:var(--surface);outline:none}
+.input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.input[aria-invalid="true"]{border-color:var(--danger)}
+.btn-block{width:100%;height:40px;margin-top:10px}
+.btn:disabled{opacity:.6;cursor:default}
+.form-msg{color:var(--danger);font-size:13px;margin:8px 0 0}
+.form-msg:empty{display:none}
+.or{display:flex;align-items:center;gap:12px;color:var(--text-3);font-size:12.5px;margin:18px 0 8px}
+.or::before,.or::after{content:"";flex:1;border-top:1px solid var(--border)}
+.sent h2{margin-bottom:6px}
+.sent p{color:var(--text-2);margin:0 0 12px}
+.sent b{color:var(--text);font-weight:600;overflow-wrap:anywhere}
+.w-note{color:var(--text-3);font-size:13px;margin:14px 2px 0}
+.w-alert{border:1px solid var(--border-strong);background:var(--surface);border-radius:var(--radius);padding:10px 14px;margin:0 0 16px;font-size:13px;color:var(--text)}
+.w-alert:empty{display:none}
+.dlg-body{padding:16px 18px 20px}
 
 /* ---------- Segments ---------- */
 .segments{background:var(--surface);border-bottom:1px solid var(--border)}
@@ -84,6 +115,7 @@ kbd{font:12px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;padding:3px
 .seg:focus-visible{outline-offset:-4px;border-radius:8px}
 .seg .count{font-size:12px;color:var(--text-3);background:var(--surface-2);border-radius:999px;padding:1px 7px;min-width:24px;text-align:center}
 .seg[aria-selected="true"] .count{background:var(--accent-soft);color:var(--accent-text)}
+.seg .count:empty{display:none}
 .seg-divider{width:1px;margin:12px 6px;background:var(--border);flex:none}
 
 /* ---------- Layout ---------- */
@@ -215,12 +247,46 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
   .j-actions .select,.j-actions .btn{height:38px}
   .status{width:auto;flex:1}
   .foot-in{padding:20px 16px 32px}
+  .w-top{padding:0 16px}
+  .welcome-main{padding:32px 16px 32px}
+  .welcome-main h1{font-size:22px}
+  .card{padding:18px}
+  .acct-email{display:none}
+  .acct-btn{padding:0 4px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
 
+<div id="welcome" hidden>
+  <header class="w-top">
+    <span class="brand">
+      <span class="brand-mark" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><path d="M2 11h10M2 7h7M2 3h4"/></svg></span>
+      SignalStack
+    </span>
+    <button class="btn btn-quiet icon-btn theme-btn" type="button" aria-label="Switch theme">
+      <svg class="icon-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>
+      <svg class="icon-sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true" hidden><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+  </header>
+  <main class="welcome-main">
+    <h1>Jobs from company career pages, in one place</h1>
+    <p class="lede">SignalStack collects openings from company career pages and public job boards every day. Filter by location, level and role, and keep track of where you've applied.</p>
+    <p class="w-stats num" id="w-stats"></p>
+    <div class="w-alert" id="w-alert" role="alert"></div>
+    <section class="card" aria-labelledby="w-signin-title">
+      <h2 id="w-signin-title">Sign in</h2>
+      <p class="muted">We'll email you a sign-in link. No password needed.</p>
+      <div data-signin="w"></div>
+      <div class="or">or</div>
+      <button class="btn btn-block" type="button" id="guest-btn">Browse as guest</button>
+    </section>
+    <p class="w-note" id="w-note">Guests can search and filter every job. Sign in to save jobs, add notes and track your applications.</p>
+  </main>
+</div>
+
+<div id="app" hidden>
 <header class="top">
   <div class="top-in">
     <a class="brand" href="./" aria-label="SignalStack, all jobs">
@@ -235,26 +301,31 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
       <button class="search-clear" id="q-clear" type="button" hidden>Clear</button>
     </div>
     <div class="top-actions">
-      <div class="menu-wrap">
-        <button class="btn btn-quiet" id="data-btn" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="data-menu">
-          Your data
+      <button class="btn btn-quiet icon-btn theme-btn" type="button" aria-label="Switch theme">
+        <svg class="icon-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>
+        <svg class="icon-sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true" hidden><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <button class="btn" id="signin-btn" type="button" data-open-signin>Sign in</button>
+      <div class="menu-wrap" id="account" hidden>
+        <button class="btn btn-quiet acct-btn" id="acct-btn" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="acct-menu">
+          <span class="avatar" id="acct-initial" aria-hidden="true"></span>
+          <span class="acct-email" id="acct-email"></span>
           <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M1 1l4 4 4-4"/></svg>
         </button>
-        <div class="menu" id="data-menu" role="menu" hidden>
-          <button type="button" role="menuitem" data-action="csv">Export tracked jobs (CSV)</button>
+        <div class="menu" id="acct-menu" role="menu" hidden>
+          <small>Signed in as</small>
+          <small class="menu-email" id="acct-menu-email"></small>
           <hr>
+          <button type="button" role="menuitem" data-action="csv">Export tracked jobs (CSV)</button>
           <button type="button" role="menuitem" data-action="backup">Download backup</button>
           <button type="button" role="menuitem" data-action="restore">Restore from backup</button>
           <hr>
           <button type="button" role="menuitem" data-action="keys">Keyboard shortcuts</button>
-          <small>Saved jobs and notes stay in this browser.</small>
+          <hr>
+          <button type="button" role="menuitem" data-action="signout">Sign out</button>
         </div>
         <input type="file" id="restore-file" accept="application/json,.json" hidden>
       </div>
-      <button class="btn btn-quiet icon-btn" id="theme-btn" type="button" aria-label="Switch theme">
-        <svg id="icon-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>
-        <svg id="icon-sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true" hidden><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
-      </button>
     </div>
   </div>
 </header>
@@ -308,12 +379,14 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
         </select>
       </label>
     </div>
-    <div class="notice" id="storage-notice" hidden>This browser is blocking local storage, so saved jobs and notes will be lost when you close the page.</div>
+    <div class="notice" id="legacy-notice" hidden><span id="legacy-text"></span><button class="link" type="button" data-open-signin>Sign in</button></div>
+    <div class="notice" id="sync-notice" hidden><span id="sync-text"></span><button class="link" type="button" id="sync-retry">Try again</button></div>
     <div class="chips" id="chips" aria-label="Active filters"></div>
     <div id="results" role="tabpanel" aria-labelledby="tab-all">
       <ul class="jobs loading" aria-hidden="true"><li class="job"></li><li class="job"></li><li class="job"></li></ul>
     </div>
   </main>
+</div>
 </div>
 
 <footer>
@@ -322,8 +395,8 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
     <div class="foot-row">
       <span id="updated"></span>
       <span>Apply links go to the original listing.</span>
-      <a href="https://github.com/JyotishkaGhosh/signalstack" target="_blank" rel="noopener">Source code</a>
     </div>
+    <div>Made by Jyotishka Ghosh · © 2026 All rights reserved</div>
   </div>
 </footer>
 
@@ -344,14 +417,28 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
   </dl>
 </dialog>
 
+<dialog id="signin-dlg" aria-labelledby="signin-title">
+  <div class="dlg-head"><h2 id="signin-title">Sign in to save jobs</h2><button class="btn btn-quiet icon-btn" type="button" data-close aria-label="Close"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M3 3l10 10M13 3L3 13"/></svg></button></div>
+  <div class="dlg-body">
+    <p class="muted">Your saved jobs, notes and application status are kept in your account. We'll email you a sign-in link, no password needed.</p>
+    <div data-signin="d"></div>
+  </div>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.1/dist/umd/supabase.min.js"></script>
+<script src="config.js"></script>
 <script>
 (() => {
   "use strict";
 
   // ---------- Constants ----------
   const PAGE = 50;
-  const STORE_KEY = "signalstack.tracker.v1";
+  const STORE_KEY = "signalstack.tracker.v1";   // saved jobs from before accounts, moved into the account on sign-in
+  const GUEST_KEY = "signalstack.guest";
+  const TABLE = "tracked_jobs";
+  const CONFIG = window.SIGNALSTACK_CONFIG || {};
   const TABS = ["all", "fresher", "experienced", "saved", "applied", "interviewing"];
+  const TRACK_TABS = ["saved", "applied", "interviewing"];
   const TAB_HINT = {
     fresher: "Internships, new grad and entry-level roles (0–2 years)",
     experienced: "Everything above entry level, plus roles with no level stated",
@@ -418,31 +505,152 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
   };
   const sourceName = id => (state.sources.find(s => s.id === id) || {}).name || id;
 
-  // ---------- Tracking data (kept in this browser) ----------
-  let storageOk = true;
+  // ---------- Account ----------
+  // The publishable key is public; Row Level Security limits each user to their own rows
+  const sb = window.supabase && CONFIG.supabaseUrl && CONFIG.supabasePublishableKey
+    ? window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabasePublishableKey, { auth: { flowType: "implicit", persistSession: true, detectSessionInUrl: true } })
+    : null;
+  let user = null;          // signed-in user, or null for guests
+  let view = null;          // "welcome" or "app"
+  let trackerReady = false; // the signed-in user's jobs have loaded
+
+  // ---------- Tracking data (kept in the user's account) ----------
+  // tracker maps job id -> { status, note, job, saved_at, applied_at, updated }
   let tracker = {};
-  function loadTracker() {
-    try {
-      const raw = localStorage.getItem(STORE_KEY);
-      const parsed = raw ? JSON.parse(raw) : {};
-      tracker = parsed && typeof parsed.jobs === "object" && parsed.jobs ? parsed.jobs : {};
-    } catch (e) { tracker = {}; storageOk = false; }
-  }
-  function saveTracker() {
-    try { localStorage.setItem(STORE_KEY, JSON.stringify({ version: 1, jobs: tracker })); storageOk = true; }
-    catch (e) { storageOk = false; }
-    $("#storage-notice").hidden = storageOk;
-  }
   const SNAPSHOT_FIELDS = ["title", "company", "location", "city", "state", "country", "workplace", "role", "level", "group", "source", "posted", "first_seen", "url"];
   const snapshot = j => Object.fromEntries(SNAPSHOT_FIELDS.map(k => [k, j[k] ?? null]));
+  const iso = ms => new Date(ms).toISOString();
+
+  // Every change is shown straight away, then written to the database in the background
   function setRecord(id, patch) {
     const job = state.byId.get(id);
     const prev = tracker[id] ? { ...tracker[id] } : null;
-    const rec = { ...(tracker[id] || {}), ...patch, updated: Date.now() };
+    const now = Date.now();
+    const rec = { ...(tracker[id] || {}), ...patch, updated: now };
     if (job) rec.job = snapshot(job);
-    if (!rec.status && !rec.note) delete tracker[id]; else tracker[id] = rec;
-    saveTracker();
+    if (rec.status && !rec.saved_at) rec.saved_at = iso(now);
+    if (rec.status && rec.status !== "saved" && !rec.applied_at) rec.applied_at = iso(now);
+    if (!rec.status) delete tracker[id]; else tracker[id] = rec;
+    persist(id);
     return prev;
+  }
+
+  // Writes for the same job run one after another, and each writes the job's latest state
+  const writes = new Map();
+  function persist(id) {
+    if (!sb || !user) return;
+    const uid = user.id;
+    const run = async () => {
+      if (!user || user.id !== uid) return;
+      const rec = tracker[id];
+      const { error } = rec
+        ? await sb.from(TABLE).upsert({ user_id: uid, job_id: id, status: rec.status, note: rec.note || "", job: rec.job || null }, { onConflict: "user_id,job_id" })
+        : await sb.from(TABLE).delete().eq("user_id", uid).eq("job_id", id);
+      if (error) throw error;
+    };
+    const p = (writes.get(id) || Promise.resolve()).then(run).catch(err => {
+      console.error("Save failed", err);
+      showSyncProblem("Your last change wasn't saved. Check your connection.");
+    });
+    writes.set(id, p);
+  }
+
+  async function fetchTracker() {
+    const out = {};
+    const size = 1000;
+    for (let from = 0; ; from += size) {
+      const { data, error } = await sb.from(TABLE)
+        .select("job_id,status,note,job,saved_at,applied_at,updated_at")
+        .order("job_id").range(from, from + size - 1);
+      if (error) throw error;
+      for (const r of data) out[r.job_id] = { status: r.status, note: r.note || "", job: r.job, saved_at: r.saved_at, applied_at: r.applied_at, updated: Date.parse(r.updated_at) || 0 };
+      if (data.length < size) return out;
+    }
+  }
+
+  async function loadTracker() {
+    const uid = user && user.id;
+    trackerReady = false;
+    $("#sync-notice").hidden = true;
+    try {
+      const t = await fetchTracker();
+      if (!user || user.id !== uid) return;
+      tracker = t;
+      trackerReady = true;
+      refreshSnapshots();
+      await moveBrowserJobs();
+    } catch (err) {
+      console.error("Couldn't load tracked jobs", err);
+      if (user && user.id === uid) showSyncProblem("Couldn't load your saved jobs.");
+    }
+    if (state.jobs.length) refresh(false);
+  }
+
+  function showSyncProblem(text) {
+    $("#sync-text").textContent = text;
+    $("#sync-notice").hidden = false;
+  }
+  $("#sync-retry").addEventListener("click", () => loadTracker());
+
+  // Keep each tracked job's copy up to date in memory while it is still listed; it is written with the next change
+  function refreshSnapshots() {
+    for (const [id, rec] of Object.entries(tracker)) {
+      const j = state.byId.get(id);
+      if (j) rec.job = snapshot(j);
+    }
+  }
+
+  // Adds records (from this browser's old storage or a backup file) to the account.
+  // A record only replaces one already in the account if it was changed more recently.
+  async function importRecords(records) {
+    const uid = user.id;
+    const inserts = [], updates = [], local = {};
+    for (const [id, r] of Object.entries(records || {})) {
+      if (!r || typeof r !== "object" || !id || id.length > 100) continue;
+      const status = r.status && STATUS_LABEL[r.status] ? r.status : (r.note ? "saved" : "");
+      if (!status) continue;
+      const when = Number(r.updated) || Date.now();
+      const cur = tracker[id];
+      if (cur && (cur.updated || 0) >= when) continue;
+      const job = state.byId.has(id) ? snapshot(state.byId.get(id)) : (r.job && typeof r.job === "object" ? snapshotFrom(r.job) : null);
+      const row = { user_id: uid, job_id: id, status, note: String(r.note || "").slice(0, 500), job };
+      if (cur) updates.push(row);
+      else inserts.push({ ...row, saved_at: iso(when), updated_at: iso(when), applied_at: status !== "saved" ? iso(when) : null });
+      local[id] = { ...(cur || {}), status, note: row.note, job, updated: when,
+        saved_at: (cur && cur.saved_at) || iso(when), applied_at: (cur && cur.applied_at) || (status !== "saved" ? iso(when) : null) };
+    }
+    for (const rows of [inserts, updates]) {
+      for (let i = 0; i < rows.length; i += 500) {
+        const { error } = await sb.from(TABLE).upsert(rows.slice(i, i + 500), { onConflict: "user_id,job_id" });
+        if (error) throw error;
+      }
+    }
+    Object.assign(tracker, local);
+    return { added: inserts.length, updated: updates.length };
+  }
+
+  // Jobs saved in this browser before accounts existed
+  function readBrowserJobs() {
+    try {
+      const parsed = JSON.parse(localStorage.getItem(STORE_KEY) || "null");
+      const jobs = parsed && typeof parsed.jobs === "object" && parsed.jobs ? parsed.jobs : {};
+      return Object.values(jobs).some(r => r && (r.status || r.note)) ? jobs : null;
+    } catch (e) { return null; }
+  }
+  const browserJobCount = () => { const j = readBrowserJobs(); return j ? Object.values(j).filter(r => r && (r.status || r.note)).length : 0; };
+
+  async function moveBrowserJobs() {
+    const jobs = readBrowserJobs();
+    if (!jobs) return;
+    try {
+      const n = Object.values(jobs).filter(r => r && (r.status || r.note)).length;
+      await importRecords(jobs);
+      try { localStorage.removeItem(STORE_KEY); } catch (e) {}
+      toast(`Moved ${plural(n, "saved job")} from this browser into your account`);
+    } catch (err) {
+      console.error("Couldn't move browser jobs", err);
+      toast("Couldn't move the jobs saved in this browser. We'll try again next time you sign in.");
+    }
   }
 
   // ---------- Theme ----------
@@ -453,29 +661,49 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
   }
   function paintThemeButton() {
     const dark = currentTheme() === "dark";
-    $("#icon-moon").hidden = dark;
-    $("#icon-sun").hidden = !dark;
-    $("#theme-btn").setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
+    for (const b of $$(".theme-btn")) {
+      $(".icon-moon", b).hidden = dark;
+      $(".icon-sun", b).hidden = !dark;
+      b.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
+    }
   }
   try { const t = localStorage.getItem("signalstack.theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}
-  $("#theme-btn").addEventListener("click", () => {
+  $$(".theme-btn").forEach(b => b.addEventListener("click", () => {
     const next = currentTheme() === "dark" ? "light" : "dark";
     document.documentElement.dataset.theme = next;
     try { localStorage.setItem("signalstack.theme", next); } catch (e) {}
     paintThemeButton();
-  });
+  }));
   matchMedia("(prefers-color-scheme: dark)").addEventListener("change", paintThemeButton);
   paintThemeButton();
 
   // ---------- Loading data ----------
   async function init() {
-    loadTracker();
-    $("#storage-notice").hidden = storageOk;
     readUrl();
-    try {
-      const res = await fetch("data.json", { cache: "no-cache" });
+    // Start downloading jobs straight away, but render only once sign-in has been checked,
+    // so the sign-in link's details are read from the address bar before it is rewritten
+    const data = fetch("data.json", { cache: "no-cache" }).then(res => {
       if (!res.ok) throw new Error("HTTP " + res.status);
-      hydrate(await res.json());
+      return res.json();
+    });
+    data.catch(() => {});
+    const linkError = readLinkError();
+
+    let session = null;
+    if (sb) {
+      try { session = (await sb.auth.getSession()).data.session; } catch (e) { console.error(e); }
+      sb.auth.onAuthStateChange((event, s) => { setTimeout(() => onAuthChange(s), 0); });
+    }
+    if (session) signedIn(session.user, false);
+    else {
+      paintAccount();
+      showView(guestChosen() ? "app" : "welcome");
+      if (linkError) { showView("welcome"); $("#w-alert").textContent = linkError; }
+      else if (!sb) $("#w-alert").textContent = "Sign-in isn't available right now. You can still browse jobs as a guest.";
+    }
+
+    try {
+      hydrate(await data);
     } catch (err) {
       showError(err);
     }
@@ -491,17 +719,188 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
       return prep(j);
     });
     state.byId = new Map(state.jobs.map(j => [j.id, j]));
-    // Keep each tracked job's saved copy up to date while it is still listed
-    let changed = false;
-    for (const [id, rec] of Object.entries(tracker)) {
-      const j = state.byId.get(id);
-      if (j) { rec.job = snapshot(j); changed = true; }
-    }
-    if (changed) saveTracker();
+    refreshSnapshots();
     renderCredits();
     buildGroups();
     render();
   }
+
+  // ---------- Welcome page, sign-in and sign-out ----------
+  function showView(v) {
+    view = v;
+    $("#welcome").hidden = v !== "welcome";
+    $("#app").hidden = v !== "app";
+    document.title = v === "welcome" ? "SignalStack · Find and track jobs" : "SignalStack · Jobs";
+    if (v === "welcome") { closeDrawer(); window.scrollTo(0, 0); }
+  }
+
+  const guestChosen = () => { try { return sessionStorage.getItem(GUEST_KEY) === "1"; } catch (e) { return false; } };
+  $("#guest-btn").addEventListener("click", () => {
+    try { sessionStorage.setItem(GUEST_KEY, "1"); } catch (e) {}
+    showView("app");
+    $("#q").focus();
+  });
+
+  // A sign-in link that has expired or was already used comes back with an error in the address
+  function readLinkError() {
+    const p = new URLSearchParams(location.hash.slice(1));
+    const q = new URLSearchParams(location.search);
+    const err = p.get("error_description") || q.get("error_description");
+    if (!err) return "";
+    history.replaceState(null, "", location.pathname);
+    return /expired|invalid/i.test(err)
+      ? "That sign-in link has expired or was already used. Enter your email to get a new one."
+      : `Sign-in didn't work: ${err}`;
+  }
+
+  function onAuthChange(session) {
+    const next = session ? session.user : null;
+    if (next && (!user || user.id !== next.id)) signedIn(next, true);
+    else if (!next && user) signedOut();
+  }
+
+  function signedIn(u, announce) {
+    user = u;
+    tracker = {};
+    trackerReady = false;
+    try { sessionStorage.removeItem(GUEST_KEY); } catch (e) {}
+    if ($("#signin-dlg").open) $("#signin-dlg").close();
+    resetSignInForms();
+    paintAccount();
+    showView("app");
+    if (state.jobs.length) refresh(false);
+    if (announce) toast(`Signed in as ${u.email || "you"}`);
+    loadTracker();
+  }
+
+  function signedOut() {
+    user = null;
+    tracker = {};
+    trackerReady = false;
+    undo = null;
+    state.openNotes.clear();
+    paintAccount();
+    $("#sync-notice").hidden = true;
+    if (["saved", "applied", "interviewing"].includes(state.tab)) state.tab = "all";
+    if (state.jobs.length) refresh();
+    hideToast();
+    showView("welcome");
+  }
+
+  async function signOut() {
+    try { await sb.auth.signOut({ scope: "local" }); } catch (e) { console.error(e); }
+    signedOut();
+  }
+
+  function paintAccount() {
+    $("#account").hidden = !user;
+    $("#signin-btn").hidden = !!user;
+    if (user) {
+      const email = user.email || "Your account";
+      $("#acct-initial").textContent = (email[0] || "?").toUpperCase();
+      $("#acct-email").textContent = email;
+      $("#acct-menu-email").textContent = email;
+      $("#acct-btn").setAttribute("aria-label", `Account: ${email}`);
+    }
+    const n = user ? 0 : browserJobCount();
+    $("#legacy-notice").hidden = !n;
+    $("#legacy-text").textContent = n ? `You have ${plural(n, "job")} saved in this browser from before. Sign in to move ${n === 1 ? "it" : "them"} into your account.` : "";
+    $("#w-note").textContent = n
+      ? `You have ${plural(n, "job")} saved in this browser from before. Sign in and ${n === 1 ? "it" : "they"}'ll move into your account.`
+      : "Guests can search and filter every job. Sign in to save jobs, add notes and track your applications.";
+  }
+
+  // The same sign-in form appears on the welcome page and in the sign-in dialog
+  function signInMarkup(key) {
+    return `
+      <form class="signin" novalidate>
+        <label class="field-label" for="email-${key}">Email</label>
+        <input class="input" id="email-${key}" name="email" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com" required>
+        <button class="btn btn-primary btn-block" type="submit">Email me a sign-in link</button>
+        <p class="form-msg" role="alert"></p>
+        ${CONFIG.googleSignIn ? `<div class="or">or</div><button class="btn btn-block" type="button" data-google>Continue with Google</button>` : ""}
+      </form>
+      <div class="sent" hidden tabindex="-1">
+        <h2>Check your email</h2>
+        <p>We sent a sign-in link to <b data-sent-to></b>. Open it to continue. The link works once.</p>
+        <button class="link" type="button" data-again>Use a different email</button>
+      </div>`;
+  }
+  $$("[data-signin]").forEach(box => { box.innerHTML = signInMarkup(box.dataset.signin); });
+
+  function resetSignInForms() {
+    for (const box of $$("[data-signin]")) {
+      $(".signin", box).hidden = false;
+      $(".sent", box).hidden = true;
+      $(".form-msg", box).textContent = "";
+    }
+  }
+
+  const redirectUrl = () => location.origin + location.pathname;
+
+  async function sendLink(form) {
+    const input = form.elements.email, btn = $("button[type=submit]", form), msg = $(".form-msg", form);
+    const email = input.value.trim();
+    msg.textContent = "";
+    input.removeAttribute("aria-invalid");
+    if (!sb) { msg.textContent = "Sign-in isn't available right now. Try again later."; return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      msg.textContent = "Enter a valid email address.";
+      input.setAttribute("aria-invalid", "true");
+      input.focus();
+      return;
+    }
+    btn.disabled = true;
+    btn.textContent = "Sending link…";
+    const { error } = await sb.auth.signInWithOtp({ email, options: { emailRedirectTo: redirectUrl() } });
+    btn.disabled = false;
+    btn.textContent = "Email me a sign-in link";
+    if (error) {
+      msg.textContent = error.status === 429 || /rate limit|security purposes/i.test(error.message)
+        ? "Too many sign-in emails. Wait a minute, then try again."
+        : error.message || "Couldn't send the link. Try again.";
+      return;
+    }
+    const box = form.closest("[data-signin]");
+    $("[data-sent-to]", box).textContent = email;
+    form.hidden = true;
+    const sent = $(".sent", box);
+    sent.hidden = false;
+    sent.focus();
+  }
+
+  // Google sign-in is ready but switched off until it is set up in Supabase (googleSignIn in config.js)
+  async function signInWithGoogle(form) {
+    const { error } = await sb.auth.signInWithOAuth({ provider: "google", options: { redirectTo: redirectUrl() } });
+    if (error) $(".form-msg", form).textContent = error.message || "Couldn't start Google sign-in.";
+  }
+
+  document.addEventListener("submit", e => {
+    const form = e.target.closest(".signin");
+    if (form) { e.preventDefault(); sendLink(form); }
+  });
+  document.addEventListener("click", e => {
+    if (e.target.closest("[data-google]")) { const f = e.target.closest(".signin"); if (sb) signInWithGoogle(f); return; }
+    const again = e.target.closest("[data-again]");
+    if (again) {
+      const box = again.closest("[data-signin]");
+      $(".sent", box).hidden = true;
+      $(".signin", box).hidden = false;
+      $("input", box).focus();
+      return;
+    }
+    if (e.target.closest("[data-open-signin]")) openSignIn();
+  });
+
+  function openSignIn(title) {
+    if (user) return;
+    $("#signin-title").textContent = title || "Sign in to save jobs";
+    const dlg = $("#signin-dlg");
+    if (!dlg.open) dlg.showModal();
+    const input = $("input", dlg);
+    if (!$(".signin", dlg).hidden) input.focus();
+  }
+  $("#signin-dlg").addEventListener("click", e => { if (e.target.closest("[data-close]") || e.target === e.currentTarget) $("#signin-dlg").close(); });
 
   function prep(j) {
     j.days = daysAgo(j.posted);
@@ -606,7 +1005,8 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
       const on = b.dataset.tab === state.tab;
       b.setAttribute("aria-selected", on);
       b.tabIndex = on ? 0 : -1;
-      $(".count", b).textContent = fmt(counts[b.dataset.tab]);
+      const tracking = TRACK_TABS.includes(b.dataset.tab);
+      $(".count", b).textContent = tracking && (!user || !trackerReady) ? "" : fmt(counts[b.dataset.tab]);
     }
     $("#results").setAttribute("aria-labelledby", "tab-" + state.tab);
   }
@@ -713,9 +1113,16 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
       j.level && j.level !== "Not specified" ? j.level : null,
       sourceName(j.source),
       j.days != null ? (j.days === 0 ? "Posted today" : `Posted ${agoText(j.days).toLowerCase()}`) : null,
+      st && st !== "saved" && rec.applied_at ? `Applied ${prettyDate(rec.applied_at)}` : st && rec.saved_at ? `Saved ${prettyDate(rec.saved_at)}` : null,
     ].filter(Boolean);
     const url = esc(safeUrl(j.url));
     const t = esc(j.title), c = esc(j.company);
+    const actions = user
+      ? `<select class="select status${st ? " on" : ""}" data-status aria-label="Status for ${t} at ${c}">
+          ${STATUSES.map(([v, l]) => `<option value="${v}" ${v === st ? "selected" : ""}>${l}</option>`).join("")}
+        </select>
+        <button class="btn" type="button" data-note-toggle aria-expanded="${noteOpen}" aria-label="${rec.note ? "Edit note" : "Add note"} for ${t}">Note</button>`
+      : `<button class="btn" type="button" data-guest-save aria-label="Save ${t} at ${c}">Save</button>`;
     return `
     <li class="job${st ? " tracked" : ""}" data-id="${esc(j.id)}" tabindex="-1">
       <div>
@@ -725,10 +1132,7 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
       </div>
       <div class="j-actions">
         <a class="btn btn-primary apply" href="${url}" target="_blank" rel="noopener" aria-label="Apply: ${t} at ${c} (opens in a new tab)">Apply</a>
-        <select class="select status${st ? " on" : ""}" data-status aria-label="Status for ${t} at ${c}">
-          ${STATUSES.map(([v, l]) => `<option value="${v}" ${v === st ? "selected" : ""}>${l}</option>`).join("")}
-        </select>
-        <button class="btn" type="button" data-note-toggle aria-expanded="${noteOpen}" aria-label="${rec.note ? "Edit note" : "Add note"} for ${t}">Note</button>
+        ${actions}
       </div>
       ${noteOpen ? `
         <div class="note-edit">
@@ -741,7 +1145,13 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
 
   function emptyState() {
     const filtered = activeCount() || state.q.trim();
-    const tracking = ["saved", "applied", "interviewing"].includes(state.tab);
+    const tracking = TRACK_TABS.includes(state.tab);
+    if (tracking && !user) {
+      return `<div class="empty"><h2>Sign in to track jobs</h2><p>Save jobs, add notes and keep track of where you've applied. Your list is kept in your account.</p><button class="btn btn-primary" type="button" data-open-signin>Sign in</button></div>`;
+    }
+    if (tracking && !trackerReady) {
+      return `<div class="empty"><h2>Loading your jobs</h2><p>This only takes a moment.</p></div>`;
+    }
     const total = tracking ? Object.values(tracker).filter(r => r.status === state.tab).length : 0;
     if (tracking && !total) {
       const word = STATUS_LABEL[state.tab].toLowerCase();
@@ -781,6 +1191,8 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
       $("#credits").innerHTML = `Jobs from ${links.slice(0, -1).join(", ")}${links.length > 1 ? " and " : ""}${links[links.length - 1]}. Listings belong to the employers and job boards that published them.`;
     }
     $("#updated").textContent = state.meta.data_date ? `Updated ${prettyDate(state.meta.data_date)}` : "";
+    $("#w-stats").textContent = [plural(state.jobs.length, "open job"), used.length ? plural(used.length, "source") : null,
+      state.meta.data_date ? `Updated ${prettyDate(state.meta.data_date)}` : null].filter(Boolean).join(" · ");
   }
 
   // ---------- Changing things ----------
@@ -811,6 +1223,7 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
 
   let undo = null;
   function changeStatus(id, status, opts = {}) {
+    if (!user) { openSignIn(); return; }
     const prev = setRecord(id, { status });
     const label = status ? `Marked as ${STATUS_LABEL[status].toLowerCase()}` : "Removed from your lists";
     undo = { id, prev };
@@ -837,7 +1250,7 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
     if (!undo) return;
     const { id, prev } = undo;
     if (prev) tracker[id] = prev; else delete tracker[id];
-    saveTracker();
+    persist(id);
     undo = null;
     hideToast();
     refresh(false);
@@ -855,6 +1268,7 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
   $("#toast-undo").addEventListener("click", doUndo);
 
   function toggleNote(id, open) {
+    if (!user) { openSignIn("Sign in to add notes"); return; }
     const willOpen = open ?? !state.openNotes.has(id);
     if (willOpen) state.openNotes.add(id); else state.openNotes.delete(id);
     const fresh = rerenderCard(id);
@@ -864,6 +1278,7 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
   }
 
   const saveNote = debounce((id, value, stateEl) => {
+    if (!user) return;
     const rec = tracker[id] || {};
     // Writing a note on a job you haven't tracked yet saves it
     const patch = { note: value.trim() ? value : "" };
@@ -979,7 +1394,8 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
   $("#results").addEventListener("click", e => {
     const t = e.target.closest("[data-note-toggle]");
     if (t) { toggleNote(t.closest(".job").dataset.id); return; }
-    if (e.target.closest("[data-note-done]")) toggleNote(e.target.closest(".job").dataset.id, false);
+    if (e.target.closest("[data-note-done]")) { toggleNote(e.target.closest(".job").dataset.id, false); return; }
+    if (e.target.closest("[data-guest-save]")) openSignIn();
   });
   $("#results").addEventListener("input", e => {
     if (e.target.matches("[data-note]")) {
@@ -1020,8 +1436,8 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
   $("#scrim").addEventListener("click", closeDrawer);
   matchMedia("(max-width: 960px)").addEventListener("change", () => closeDrawer());
 
-  // "Your data" menu
-  const menuBtn = $("#data-btn"), menu = $("#data-menu");
+  // Account menu
+  const menuBtn = $("#acct-btn"), menu = $("#acct-menu");
   function openMenu() { menu.hidden = false; menuBtn.setAttribute("aria-expanded", "true"); $("button", menu).focus(); }
   function closeMenu(focusBtn) { if (menu.hidden) return; menu.hidden = true; menuBtn.setAttribute("aria-expanded", "false"); if (focusBtn) menuBtn.focus(); }
   menuBtn.addEventListener("click", () => (menu.hidden ? openMenu() : closeMenu()));
@@ -1041,6 +1457,7 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
     if (a.dataset.action === "backup") downloadBackup();
     if (a.dataset.action === "restore") $("#restore-file").click();
     if (a.dataset.action === "keys") $("#keys-dlg").showModal();
+    if (a.dataset.action === "signout") signOut();
   });
   $("#keys-dlg").addEventListener("click", e => { if (e.target.closest("[data-close]") || e.target === e.currentTarget) $("#keys-dlg").close(); });
 
@@ -1074,38 +1491,35 @@ dialog::backdrop{background:rgba(0,0,0,.35)}
     const file = e.target.files[0];
     e.target.value = "";
     if (!file) return;
+    if (!user) return;
+    let data;
     try {
-      const data = JSON.parse(await file.text());
-      if (!data || data.app !== "signalstack" || typeof data.jobs !== "object") throw new Error("not a SignalStack backup");
-      let added = 0, updated = 0;
-      for (const [id, rec] of Object.entries(data.jobs)) {
-        if (!rec || typeof rec !== "object") continue;
-        const clean = { status: rec.status && STATUS_LABEL[rec.status] ? rec.status : "", note: String(rec.note || "").slice(0, 500), updated: Number(rec.updated) || Date.now(), job: rec.job && typeof rec.job === "object" ? snapshotFrom(rec.job) : null };
-        const cur = tracker[id];
-        if (!cur) { tracker[id] = clean; added++; }
-        else if ((clean.updated || 0) > (cur.updated || 0)) { tracker[id] = { ...clean, job: clean.job || cur.job }; updated++; }
-      }
-      saveTracker();
+      data = JSON.parse(await file.text());
+      if (!data || data.app !== "signalstack" || typeof data.jobs !== "object" || !data.jobs) throw new Error("not a SignalStack backup");
+    } catch (err) {
+      toast("Couldn't restore that file. Choose a backup downloaded from SignalStack.");
+      return;
+    }
+    try {
+      const { added, updated } = await importRecords(data.jobs);
       refresh(false);
       toast(`Restored: ${plural(added, "job")} added, ${fmt(updated)} updated`);
     } catch (err) {
-      toast("Couldn't restore that file. Choose a backup downloaded from SignalStack.");
+      console.error(err);
+      toast("Couldn't save the restored jobs to your account. Try again.");
     }
   });
   const snapshotFrom = o => Object.fromEntries(SNAPSHOT_FIELDS.map(k => [k, o[k] == null ? null : String(o[k])]));
-
-  // Keep several open tabs in sync
-  window.addEventListener("storage", e => { if (e.key === STORE_KEY) { loadTracker(); if (state.jobs.length) refresh(false); } });
 
   // ---------- Keyboard shortcuts ----------
   document.addEventListener("keydown", e => {
     if (e.key === "Escape") {
       if (drawer.classList.contains("open")) { closeDrawer(); return; }
     }
-    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    if (e.ctrlKey || e.metaKey || e.altKey || view !== "app") return;
     const el = document.activeElement;
     const typing = el && (/^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName) || el.isContentEditable);
-    if (typing || $("#keys-dlg").open) return;
+    if (typing || $("dialog[open]")) return;
     const cards = $$(".job");
     const cur = el && el.closest && el.closest(".job");
     const idx = cur ? cards.indexOf(cur) : -1;
