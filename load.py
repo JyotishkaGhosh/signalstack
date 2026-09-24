@@ -4,6 +4,7 @@ import os
 import re
 import csv
 import datetime
+import shutil
 import pandas as pd
 import duckdb
 
@@ -155,9 +156,14 @@ PARSERS = {
 with open("companies.csv", encoding="utf-8") as f:
     names = {r["company"].strip(): (r.get("name") or "").strip() for r in csv.DictReader(f)}
 
-rows = []
+HISTORY = "data/job_history.parquet"   # one row per job ever seen; committed to the repo
+KEEP_RAW_DAYS = 3                      # raw JSON is only kept locally (it is not committed)
 
-for path in glob.glob("data/raw/jobs/*/*.json"):
+rows = []
+snapshots = set()                     # (source, feed, date) for every raw file read in this run
+
+# Usually just today's files: GitHub Actions starts with an empty data/raw/
+for path in sorted(glob.glob("data/raw/jobs/*/*.json")):
     snapshot_date = os.path.basename(os.path.dirname(path))
     name = os.path.basename(path).replace(".json", "")
 
@@ -172,6 +178,7 @@ for path in glob.glob("data/raw/jobs/*/*.json"):
         print(f"Skipping {path}: no parser for '{source}'")
         continue
 
+    snapshots.add((source, feed, snapshot_date))
     try:
         with open(path, encoding="utf-8") as f:
             data = json.load(f)
@@ -186,7 +193,8 @@ for path in glob.glob("data/raw/jobs/*/*.json"):
     except Exception as e:                    # a broken file should not stop the load
         print(f"Could not read {path}: {e}")
 
-df = pd.DataFrame(rows)
+# Named columns so an empty data/raw/ still gives a table with the right shape
+df = pd.DataFrame(rows, columns=list(job()) + ["source", "feed", "snapshot_date"])
 text_cols = [c for c in df.columns if c != "min_years"]
 df[text_cols] = df[text_cols].astype("string")
 df["min_years"] = df["min_years"].astype("Int64")
@@ -201,4 +209,71 @@ con.execute("CREATE OR REPLACE TABLE raw_jobs AS SELECT * FROM df")
 count = con.execute("SELECT COUNT(*) FROM raw_jobs").fetchone()[0]
 print(f"{count} rows loaded into raw_jobs")
 print(con.sql("SELECT source, COUNT(*) AS rows FROM raw_jobs GROUP BY 1 ORDER BY 2 DESC"))
+
+# ---- Job history: first and last day we saw each job, plus its details from the last day ----
+# prev_seen is the sighting before last_seen, so a board fetched twice on one day can be undone and redone
+FIELDS = "title, company, location, job_date, url, city, region, country, remote_hint, level_hint, department_hint, min_years"
+if os.path.exists(HISTORY):
+    con.execute(f"CREATE OR REPLACE TABLE job_history AS SELECT * FROM read_parquet('{HISTORY}')")
+else:
+    print(f"No {HISTORY} yet, starting a new history")
+    con.execute(f"""CREATE OR REPLACE TABLE job_history AS
+        SELECT source, feed, job_id, {FIELDS},
+               NULL::DATE AS first_seen, NULL::DATE AS last_seen, NULL::DATE AS prev_seen
+        FROM raw_jobs LIMIT 0""")
+
+for day in sorted({d for _, _, d in snapshots}):
+    feeds = pd.DataFrame([(s, f) for s, f, d in snapshots if d == day], columns=["source", "feed"])
+    con.execute("CREATE OR REPLACE TEMP TABLE day_feeds AS SELECT * FROM feeds")
+    # Compare each board's file with the last day already in the history:
+    # older -> already merged, skip; same day -> a re-run, undo that day first; newer -> merge
+    con.execute("""
+        CREATE OR REPLACE TEMP TABLE targets AS
+        SELECT d.source, d.feed, h.latest = CAST(? AS DATE) AS rerun
+        FROM day_feeds d
+        LEFT JOIN (SELECT source, feed, MAX(last_seen) AS latest FROM job_history GROUP BY 1, 2) h USING (source, feed)
+        WHERE h.latest IS NULL OR h.latest <= CAST(? AS DATE)
+    """, [day, day])
+    con.execute("""
+        DELETE FROM job_history h USING targets t
+        WHERE t.rerun AND h.source = t.source AND h.feed = t.feed AND h.first_seen = CAST(? AS DATE)
+    """, [day])
+    con.execute("""
+        UPDATE job_history h SET last_seen = prev_seen, prev_seen = NULL FROM targets t
+        WHERE t.rerun AND h.source = t.source AND h.feed = t.feed AND h.last_seen = CAST(? AS DATE)
+    """, [day])
+    con.execute(f"""
+        CREATE OR REPLACE TABLE job_history AS
+        WITH seen AS (
+            SELECT r.* FROM raw_jobs r JOIN targets t USING (source, feed)
+            WHERE r.snapshot_date = ? AND r.job_id IS NOT NULL
+        )
+        SELECT s.source, s.feed, s.job_id, {", ".join("s." + c for c in FIELDS.split(", "))},
+               COALESCE(h.first_seen, CAST(? AS DATE)) AS first_seen,
+               CAST(? AS DATE) AS last_seen,
+               h.last_seen AS prev_seen
+        FROM seen s LEFT JOIN job_history h USING (source, feed, job_id)
+        UNION ALL
+        SELECT h.* FROM job_history h ANTI JOIN seen s USING (source, feed, job_id)
+    """, [day, day, day])
+
+# Sorted and uncompressed so git can store each day's version as a small delta
+# (git compresses it anyway; a compressed file would add its full size to the repo every day)
+os.makedirs(os.path.dirname(HISTORY), exist_ok=True)
+con.execute(f"""COPY (SELECT * FROM job_history ORDER BY source, feed, job_id)
+                TO '{HISTORY}' (FORMAT parquet, COMPRESSION uncompressed)""")
+total, open_now = con.execute("""
+    SELECT COUNT(*), COUNT(*) FILTER (WHERE last_seen = latest)
+    FROM (SELECT last_seen, MAX(last_seen) OVER (PARTITION BY source, feed) AS latest FROM job_history)
+""").fetchone()
+print(f"{HISTORY}: {total} jobs tracked, {open_now} on their board's latest list "
+      f"({os.path.getsize(HISTORY) / 1e6:.1f} MB)")
 con.close()
+
+# Raw files are only needed until they are in the history; keep a few days locally for debugging
+cutoff = (datetime.date.today() - datetime.timedelta(days=KEEP_RAW_DAYS)).isoformat()
+for folder in glob.glob("data/raw/jobs/*"):
+    day = os.path.basename(folder)
+    if re.fullmatch(r"\d{4}-\d{2}-\d{2}", day) and day < cutoff:
+        shutil.rmtree(folder)
+        print(f"Deleted old raw folder {folder}")

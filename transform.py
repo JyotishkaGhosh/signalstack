@@ -14,7 +14,7 @@ BOARDS = ("remotive", "arbeitnow", "themuse", "adzuna")
 
 # ---- 1. Clean locations: city, state, country and remote / hybrid / on-site ----
 places = con.sql("""
-    SELECT DISTINCT location, city, region, country, remote_hint FROM raw_jobs
+    SELECT DISTINCT location, city, region, country, remote_hint FROM job_history
 """).df()
 parsed = [parse_location(*[None if pd.isna(v) else v for v in r])
           for r in places.itertuples(index=False, name=None)]
@@ -76,7 +76,9 @@ SELECT DISTINCT
     trim(r.company)                                                   AS company,
     r.location,
     r.url,
-    CAST(r.snapshot_date AS DATE)                                     AS snapshot_date,
+    -- One row per job: its details are from the last day we saw it
+    r.last_seen                                                       AS snapshot_date,
+    r.first_seen,
     TRY_CAST(r.job_date AS DATE)                                      AS job_date,
     COALESCE(NULLIF(role_of(lower(r.title)), 'Other'),
              role_of(lower(r.department_hint)), 'Other')              AS role_type,
@@ -85,7 +87,7 @@ SELECT DISTINCT
     m.clean_state                                                     AS state,
     m.clean_country                                                   AS country,
     m.workplace
-FROM raw_jobs r
+FROM job_history r
 LEFT JOIN location_map m
   ON  m.location    IS NOT DISTINCT FROM r.location
   AND m.city        IS NOT DISTINCT FROM r.city
@@ -102,7 +104,7 @@ SELECT *, CASE WHEN level IN ('Intern', 'Entry level') THEN 'Fresher' ELSE 'Expe
 FROM jobs_clean
 """)
 
-# ---- 3. Current jobs: each board's latest day of data, with the first day we saw each job ----
+# ---- 3. Current jobs: the ones on each board's latest day of data ----
 with open("companies.csv", encoding="utf-8") as f:
     configured = pd.DataFrame([{"source": r["ats"].strip().lower(), "feed": r["company"].strip()}
                                for r in csv.DictReader(f) if r["company"].strip()])
@@ -112,25 +114,18 @@ con.execute("CREATE OR REPLACE TABLE configured_feeds AS SELECT * FROM configure
 con.execute("""
 CREATE OR REPLACE TABLE jobs_current AS
 WITH feed_dates AS (
-    SELECT source, feed, MIN(snapshot_date) AS feed_first_date, MAX(snapshot_date) AS feed_latest_date
+    SELECT source, feed, MIN(first_seen) AS feed_first_date, MAX(snapshot_date) AS feed_latest_date
     FROM jobs_clean
     GROUP BY source, feed
-),
-first_seen AS (
-    SELECT source, feed, job_id, MIN(snapshot_date) AS first_seen
-    FROM jobs_clean
-    GROUP BY source, feed, job_id
 )
 SELECT
     j.*,
-    s.first_seen,
     -- Posting date from the source when it has one, otherwise the day we first saw the job
-    COALESCE(LEAST(j.job_date, j.snapshot_date), s.first_seen) AS posted_date,
+    COALESCE(LEAST(j.job_date, j.snapshot_date), j.first_seen) AS posted_date,
     -- New = first seen in this run, on a board we were already following before today
-    (s.first_seen = f.feed_latest_date AND s.first_seen > f.feed_first_date) AS is_new
+    (j.first_seen = f.feed_latest_date AND j.first_seen > f.feed_first_date) AS is_new
 FROM jobs_clean j
 JOIN feed_dates f USING (source, feed)
-JOIN first_seen s USING (source, feed, job_id)
 JOIN configured_feeds c USING (source, feed)
 WHERE j.snapshot_date = f.feed_latest_date
   -- A board that failed for a few days keeps its last jobs; after that they are dropped
