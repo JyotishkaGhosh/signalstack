@@ -5,7 +5,7 @@ A daily-updated job board and application tracker, built on a small batch data p
 **Live site:** https://signalstack-theta.vercel.app
 
 <!-- stats:start -->
-As of the 2026-10-17 run: 5,561 open jobs from 337 companies, collected from 10 configured sources (9 returned jobs in that run), with 25 days of history (2026-09-23 to 2026-10-17).
+As of the 2026-10-18 run: 5,551 open jobs from 348 companies, collected from 10 configured sources (9 returned jobs in that run), with 26 days of history (2026-09-23 to 2026-10-18).
 <!-- stats:end -->
 
 ## What it does
